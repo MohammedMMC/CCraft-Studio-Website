@@ -12,7 +12,7 @@ const navLinks = [
 export default function Navbar() {
   return (
     <header className="border-b border-neutral-200 bg-white">
-      <nav className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-4">
+      <nav className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-6 py-4">
         <Link href="/" className="text-lg font-semibold text-neutral-900">
           CCraft Studio
         </Link>

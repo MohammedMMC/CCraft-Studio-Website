@@ -45,7 +45,7 @@ export default function PreviewSwiper() {
         {previewImages.map((src, index) => (
           <SwiperSlide key={src}>
             <Image
-              className="border-lime/80 shadow-lime shadow-[0_4px_0_0] border-4 aspect-video h-64 w-full object-cover select-none pointer-events-none"
+              className="border-lime/80 shadow-lime shadow-[0_4px_0_0] border-4 aspect-video h-auto max-h-80 w-full select-none pointer-events-none"
               src={src}
               alt={`CCraft Studio Preview ${index + 1}`}
               width={1280}

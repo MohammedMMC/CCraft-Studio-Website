@@ -3,15 +3,18 @@
 :root {
   --primary: #1b2325;
   --secondary: #fbfeff;
+
+  --color-white: #fbfeff;
+  --color-lime: #70a544;
 }
 
 @theme inline {
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --font-mc: var(--font-minecraftia);
-  --font-mono: var(--font-geist-mono);
 
-  --color-white: #fbfeff;
+  --color-white: var(--color-white);
+  --color-lime: var(--color-lime);
 }
 
 body {

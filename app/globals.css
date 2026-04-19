@@ -20,3 +20,29 @@
 body {
   @apply bg-white text-primary font-mc;
 }
+
+.preview-swiper {
+  --swiper-theme-color: var(--primary);
+  --swiper-navigation-size: 0.95rem;
+  padding-bottom: 30px !important;
+}
+
+.preview-swiper .swiper-button-prev,
+.preview-swiper .swiper-button-next {
+  width: 2.3rem;
+  height: 2.3rem;
+  color: var(--secondary);
+}
+
+.preview-swiper .swiper-pagination-bullet {
+  opacity: 0.35;
+  background-color: var(--primary);
+  width: 30px;
+  height: 5px;
+  border-radius: 1px;
+}
+
+.preview-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
+  background-color: var(--color-lime);
+}

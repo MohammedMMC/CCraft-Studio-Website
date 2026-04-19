@@ -17,7 +17,7 @@ export default function Navbar() {
           CCraft Studio
         </Link>
 
-        <ul className="flex flex-wrap items-center gap-2 text-sm">
+        {/* <ul className="flex flex-wrap items-center gap-2 text-sm">
           {navLinks.map((item) => (
             <li key={item.href}>
               <Link
@@ -28,7 +28,7 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
-        </ul>
+        </ul> */}
       </nav>
     </header>
   );

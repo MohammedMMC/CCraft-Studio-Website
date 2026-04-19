@@ -27,13 +27,6 @@ body {
   padding-bottom: 30px !important;
 }
 
-.preview-swiper .swiper-button-prev,
-.preview-swiper .swiper-button-next {
-  width: 2.3rem;
-  height: 2.3rem;
-  color: var(--secondary);
-}
-
 .preview-swiper .swiper-pagination-bullet {
   opacity: 0.35;
   background-color: var(--primary);

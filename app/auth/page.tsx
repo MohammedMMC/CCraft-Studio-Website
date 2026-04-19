@@ -2,10 +2,7 @@ import ScreenLayout from "../../components/ScreenLayout";
 
 export default function AuthPage() {
   return (
-    <ScreenLayout
-      title="Login / Register"
-      description="Starter authentication screen with separate login and register areas."
-    >
+    <ScreenLayout>
       <section className="grid gap-4 md:grid-cols-2">
         <article className="rounded-2xl border border-neutral-200 bg-white p-6">
           <h2 className="text-lg font-semibold">Login</h2>

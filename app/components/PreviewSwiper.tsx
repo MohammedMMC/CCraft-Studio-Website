@@ -14,7 +14,7 @@ const previewImages = [
 
 export default function PreviewSwiper() {
   return (
-    <section className="my-14 w-full">
+    <section className="my-16 w-full">
       <Swiper
         modules={[Autoplay, Pagination]}
         loop

@@ -4,14 +4,6 @@ import Button from "./components/Button";
 import Image from "next/image";
 import PreviewSwiper from "./components/PreviewSwiper";
 
-const quickLinks = [
-  { href: "/auth", label: "Login / Register" },
-  { href: "/community", label: "Community" },
-  { href: "/dashboard", label: "Dashboard Main" },
-  { href: "/dashboard/projects", label: "Dashboard Projects" },
-  { href: "/dashboard/admin", label: "Dashboard Admin" },
-];
-
 export default function HomePage() {
   return (
     <ScreenLayout>

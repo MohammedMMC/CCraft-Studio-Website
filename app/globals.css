@@ -1,21 +1,19 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
 :root {
   --primary: #1b2325;
   --secondary: #fbfeff;
-  --white: #fbfeff;
 }
 
 @theme inline {
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
-  --color-white: var(--white);
-  --font-sans: "Montserrat", sans-serif;
+  --font-mc: var(--font-minecraftia);
   --font-mono: var(--font-geist-mono);
+
+  --color-white: #fbfeff;
 }
 
 body {
-  @apply bg-white text-primary;
-  font-family: "Montserrat", sans-serif;
+  @apply bg-white text-primary font-mc;
 }

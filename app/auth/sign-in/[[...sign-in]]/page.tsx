@@ -3,10 +3,7 @@ import ScreenLayout from "../../../../components/ScreenLayout";
 
 export default function SignInPage() {
   return (
-    <ScreenLayout
-      title="Sign In"
-      description="Access your CCraft Studio account."
-    >
+    <ScreenLayout>
       <section className="flex justify-center">
         <SignIn path="/auth/sign-in" routing="path" signUpUrl="/auth/sign-up" />
       </section>

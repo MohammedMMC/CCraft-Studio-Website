@@ -22,5 +22,70 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  projects         Project[]        @relation("ProjectOwner")
+  projectComments  ProjectComment[]
+  reviewedProjects Project[]        @relation("ProjectReviewer")
+
   @@index([email])
+}
+
+model Project {
+  id               String    @id @default(cuid())
+  ownerId          String
+  name             String
+  shortDescription String
+  description      String
+  version          String
+  tags             String[]
+  projectFileUrl   String
+  projectFileName  String
+  projectFileSize  Int
+  downloads        Int       @default(0)
+  likes            Int       @default(0)
+  reviewed         Boolean   @default(false)
+  reviewLog        String?
+  reviewedAt       DateTime?
+  reviewedById     String?
+  publishDate      DateTime
+  projectUpdatedAt DateTime
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  owner      User             @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  reviewedBy User?            @relation("ProjectReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  images     ProjectImage[]
+  comments   ProjectComment[]
+
+  @@index([ownerId, createdAt(sort: Desc)])
+  @@index([reviewed, createdAt(sort: Desc)])
+  @@index([publishDate(sort: Desc)])
+}
+
+model ProjectImage {
+  id          String   @id @default(cuid())
+  projectId   String
+  url         String
+  pathname    String?
+  contentType String?
+  size        Int?
+  isMain      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, isMain])
+}
+
+model ProjectComment {
+  id        String   @id @default(cuid())
+  projectId String
+  userId    String
+  text      String
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
 }

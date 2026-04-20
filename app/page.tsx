@@ -9,7 +9,7 @@ export default function HomePage() {
     <ScreenLayout>
       {/* Main Section */}
       <section className="flex md:flex-row-reverse flex-col justify-between items-center md:gap-12 py-2">
-        <Image className="size-[calc(200px+15vw)] max-w-96 h-auto aspect-square" src="/images/icon.png" alt="CCraft Studio Logo" width={1000} height={1000} />
+        <Image className="size-[calc(200px+15vw)] max-w-96 h-auto aspect-square" src="/images/icon.png" alt="CCraft Studio Logo" width={1000} height={1000} loading="eager"/>
         <div className="w-full max-w-xl">
           <h1 className="font-bold lg:text-5xl md:text-[calc(20px+1vw)] sm:text-3xl text-2xl sm:my-10 my-4">Design and Build <br /> apps with ease</h1>
           <p className="md:text-lg text-md">An easy-to-use studio application that helps you to quickly and easily build systems/apps for <b className="whitespace-nowrap">CC: Tweaked</b> minecraft mod.</p>

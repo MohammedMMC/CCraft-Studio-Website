@@ -46,7 +46,7 @@ async function uploadToBlob(
     token: string,
 ): Promise<UploadedBlob> {
     const uploaded = await put(pathname, file, {
-        access: "private",
+        access: "public",
         token,
         addRandomSuffix: true,
         contentType: file.type || "application/octet-stream",

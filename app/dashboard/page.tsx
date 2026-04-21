@@ -104,14 +104,9 @@ export default async function DashboardPage() {
                     <p className="text-xs text-neutral-500">
                       Version {project.version} | Published {project.publishDate.toLocaleDateString()}
                     </p>
-                    <p className="text-xs text-neutral-500">
+                    <p className="rounded-md border border-neutral-200 bg-neutral-50 px-2 py-1 text-xs text-neutral-700">
                       Status: {project.reviewed ? "Reviewed" : "In Review"}
                     </p>
-                    {project.reviewLog ? (
-                      <p className="rounded-md border border-neutral-200 bg-neutral-50 px-2 py-1 text-xs text-neutral-700">
-                        Review Log: {project.reviewLog}
-                      </p>
-                    ) : null}
                   </div>
                 </article>
               );

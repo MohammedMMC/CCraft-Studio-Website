@@ -17,6 +17,17 @@ export const PROJECT_LIMITS = {
     maxProjectFileSizeBytes: 40 * 1024 * 1024,
 } as const;
 
+export function formatDate(date: Date): string {
+    return date.toLocaleDateString();
+}
+
+export function formatBytes(size: number): string {
+    if (size < 1024) return `${size} B`;
+    const kb = size / 1024;
+    if (kb < 1024) return `${kb.toFixed(1)} KB`;
+    return `${(kb / 1024).toFixed(2)} MB`;
+}
+
 const ALLOWED_IMAGE_TYPES = new Set([
     "image/png",
     "image/jpeg",

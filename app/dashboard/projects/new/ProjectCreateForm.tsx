@@ -5,7 +5,7 @@ import { useActionState, useState } from "react";
 import {
     createProjectAction,
 } from "./actions";
-import { CreateProjectFieldErrors, PROJECT_LIMITS } from "@/lib/projects/validation";
+import { CreateProjectFieldErrors, formatBytes, PROJECT_LIMITS } from "@/lib/projects/validation";
 import MDEditor from "@uiw/react-md-editor";
 
 const createProjectInitialState = {
@@ -13,20 +13,6 @@ const createProjectInitialState = {
     message: "",
     fieldErrors: {} as CreateProjectFieldErrors,
 };
-
-function formatBytes(size: number): string {
-    if (size < 1024) {
-        return `${size} B`;
-    }
-
-    const kb = size / 1024;
-    if (kb < 1024) {
-        return `${kb.toFixed(1)} KB`;
-    }
-
-    const mb = kb / 1024;
-    return `${mb.toFixed(2)} MB`;
-}
 
 function FieldError({
     errors,
@@ -36,10 +22,7 @@ function FieldError({
     name: keyof CreateProjectFieldErrors;
 }) {
     const message = errors?.[name];
-
-    if (!message) {
-        return null;
-    }
+    if (!message) return null;
 
     return <p className="mt-1 text-xs text-red-600">{message}</p>;
 }

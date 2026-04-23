@@ -55,21 +55,25 @@ export default function ProjectCard({ project, view = "user" }: ProjectCardProps
                     <h3 className="font-semibold text-white line-clamp-1">{project.name}</h3>
                     <p className="text-sm text-white/90 line-clamp-3">{project.shortDescription}</p>
                 </div>
-                {view === "owner" && (
+                {(view === "owner" || view === "user") && (
                     <div className="flex flex-col gap-2">
-                        <p className="text-xs text-white/70">
-                            Version {project.version} | Published {project.publishDate.toLocaleDateString()}
-                        </p>
-                        <p className={`
-                        rounded-sm border px-2 py-1 text-xs
-                        ${!project.reviewed
-                                ? "border-amber-200/50 bg-amber-200/10 text-amber-300/90"
-                                : latestReview?.rejected
-                                    ? "border-red-400/50 bg-red-700/10 text-red-300/90"
-                                    : "border-lime/50 bg-lime/10 text-lime"}
-                      `}>
-                            Status: {!project.reviewed ? "In Review" : (latestReview?.rejected ? "Rejected" : "Approved")}
-                        </p>
+                        {view === "owner" && (
+                            <>
+                                <p className="text-xs text-white/70">
+                                    Version {project.version} | Published {project.publishDate.toLocaleDateString()}
+                                </p>
+                                <p className={`
+                                    rounded-sm border px-2 py-1 text-xs
+                                    ${!project.reviewed
+                                        ? "border-amber-200/50 bg-amber-200/10 text-amber-300/90"
+                                        : latestReview?.rejected
+                                            ? "border-red-400/50 bg-red-700/10 text-red-300/90"
+                                            : "border-lime/50 bg-lime/10 text-lime"}
+                                `}>
+                                    Status: {!project.reviewed ? "In Review" : (latestReview?.rejected ? "Rejected" : "Approved")}
+                                </p>
+                            </>
+                        )}
                         <Link
                             href={`/dashboard/projects/${project.id}`}
                             className="text-center cursor-pointer rounded-md bg-lime px-4 py-2 text-sm font-semibold text-white hover:bg-lime/85"
@@ -120,7 +124,7 @@ export default function ProjectCard({ project, view = "user" }: ProjectCardProps
                             </label>
                             <textarea
                                 name="message"
-                                className="mt-1 bg-white min-h-20 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+                                className="mt-1 bg-white min-h-20 w-full rounded-sm border border-neutral-300 px-3 py-2 text-sm"
                                 maxLength={PROJECT_LIMITS.reviewLog.max}
                                 placeholder="Write why this project was approved or rejected."
                             />

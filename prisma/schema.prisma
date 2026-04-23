@@ -24,13 +24,13 @@ model User {
 
   projects         Project[]        @relation("ProjectOwner")
   projectComments  ProjectComment[]
-  reviewedProjects Project[]        @relation("ProjectReviewer")
+  reviewedLogs     ReviewData[]     @relation("ProjectReviewer")
 
   @@index([email])
 }
 
 model Project {
-  id               String    @id @default(cuid())
+  id               String       @id @default(cuid())
   ownerId          String
   name             String
   shortDescription String
@@ -40,25 +40,37 @@ model Project {
   projectFileUrl   String
   projectFileName  String
   projectFileSize  Int
-  downloads        Int       @default(0)
-  likes            Int       @default(0)
-  reviewed         Boolean   @default(false)
-  reviewLog        String?
-  reviewedAt       DateTime?
-  reviewedById     String?
+  downloads        Int          @default(0)
+  likes            Int          @default(0)
+  reviewed         Boolean      @default(false)
+  reviewLog        ReviewData[]
   publishDate      DateTime
   projectUpdatedAt DateTime
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 
-  owner      User             @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  reviewedBy User?            @relation("ProjectReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
-  images     ProjectImage[]
-  comments   ProjectComment[]
+  owner    User                 @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  images   ProjectImage[]
+  comments ProjectComment[]
 
   @@index([ownerId, createdAt(sort: Desc)])
   @@index([reviewed, createdAt(sort: Desc)])
   @@index([publishDate(sort: Desc)])
+}
+
+model ReviewData {
+  id           String   @id @default(cuid())
+  projectId    String
+  reviewedById String
+  message      String
+  rejected     Boolean  @default(false)
+  reviewedAt   DateTime @default(now())
+
+  project    Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  reviewedBy User       @relation("ProjectReviewer", fields: [reviewedById], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([reviewedById])
 }
 
 model ProjectImage {

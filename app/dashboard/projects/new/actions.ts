@@ -136,7 +136,6 @@ export async function createProjectAction(
                 projectFileName: payload.projectFile.name,
                 projectFileSize: payload.projectFile.size,
                 reviewed: false,
-                reviewLog: "Pending admin review.",
                 publishDate: payload.publishDate,
                 projectUpdatedAt: payload.projectUpdatedAt,
                 images: {
@@ -157,7 +156,7 @@ export async function createProjectAction(
         return {
             status: "success",
             message:
-                "Project uploaded successfully. It is now in review state and will appear in Community after admin approval.",
+                "Project uploaded successfully. It is now in review state and will appear in Community page after admin approval.",
             fieldErrors: {},
         };
     } catch (error) {

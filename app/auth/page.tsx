@@ -33,7 +33,7 @@ export default async function AuthPage() {
           </p>
           <Link
             href="/auth/sign-up"
-            className="mt-5 inline-flex rounded-lg bg-lime-700 px-4 py-2 text-sm font-semibold text-white hover:bg-lime-800"
+            className="mt-5 inline-flex rounded-lg bg-lime px-4 py-2 text-sm font-semibold text-white hover:bg-lime/85"
           >
             Open Sign Up
           </Link>

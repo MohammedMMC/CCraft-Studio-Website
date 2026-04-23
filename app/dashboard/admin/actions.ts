@@ -18,22 +18,29 @@ export async function reviewProjectAction(formData: FormData): Promise<void> {
     if (!adminUser || adminUser.role !== "ADMIN") return;
 
     const projectId = String(formData.get("projectId") ?? "").trim();
-    const reviewLog = sanitizeReviewLog(String(formData.get("reviewLog") ?? ""));
+    const reviewMessage = sanitizeReviewLog(String(formData.get("message") ?? ""));
+    const rejectedRaw = String(formData.get("rejected") ?? "false").toLowerCase();
+    const rejected = rejectedRaw === "true" || rejectedRaw === "1" || rejectedRaw === "on";
 
     if (!projectId) return;
 
     try {
-        await prisma.project.updateMany({
-            where: {
-                id: projectId,
-                reviewed: false,
-            },
-            data: {
-                reviewed: true,
-                reviewedAt: new Date(),
-                reviewedById: adminUser.id,
-                reviewLog: reviewLog || "Reviewed and approved.",
-            },
+        await prisma.$transaction(async (tx) => {
+            const updated = await tx.project.updateMany({
+                where: { id: projectId, reviewed: false, },
+                data: { reviewed: true, },
+            });
+
+            if (updated.count === 0) return;
+
+            await tx.reviewData.create({
+                data: {
+                    projectId,
+                    reviewedById: adminUser.id,
+                    message: reviewMessage || (rejected ? "Rejected by admin review." : "Reviewed and approved."),
+                    rejected,
+                },
+            });
         });
     } catch (error) {
         if (!isMissingProjectTablesError(error)) {

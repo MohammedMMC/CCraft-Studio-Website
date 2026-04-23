@@ -68,7 +68,7 @@ export default async function DashboardAdminPage() {
             No unreviewed projects right now.
           </div>
         ) : (
-          <div className="mt-6 space-y-6">
+          <div className="mt-6 grid gap-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1">
             {pendingProjects.map((project) => {
               const ownerName = [project.owner.firstName, project.owner.lastName]
                 .filter(Boolean)
@@ -143,20 +143,28 @@ export default async function DashboardAdminPage() {
                     <form action={reviewProjectAction} className="space-y-2 rounded-xl border border-neutral-200 bg-neutral-50 p-3">
                       <input type="hidden" name="projectId" value={project.id} />
                       <label className="block text-xs font-semibold text-neutral-800">
-                        Review Log
+                        Review Message
                         <textarea
-                          name="reviewLog"
+                          name="message"
                           className="mt-1 min-h-20 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
                           maxLength={PROJECT_LIMITS.reviewLog.max}
-                          placeholder="Example: Security and metadata checks passed."
+                          placeholder="Write why this project was approved or rejected."
                         />
                       </label>
-                      <button
-                        type="submit"
-                        className="cursor-pointer rounded-md bg-lime-700 px-4 py-2 text-sm font-semibold text-white hover:bg-lime-800"
-                      >
-                        Mark As Reviewed
-                      </button>
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="submit"
+                          name="rejected"
+                          value="false"
+                          className="cursor-pointer rounded-md bg-lime px-4 py-2 text-sm font-semibold text-white hover:bg-lime/85"
+                        >Approve Project</button>
+                        <button
+                          type="submit"
+                          name="rejected"
+                          value="true"
+                          className="cursor-pointer rounded-md bg-rose-700 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-800"
+                        >Reject Project</button>
+                      </div>
                     </form>
                   </div>
                 </article>

@@ -44,17 +44,6 @@ export default function ProjectCreateForm() {
             <input type="hidden" name="description" value={description} />
             <input type="hidden" name="mainImageIndex" value={String(mainImageIndex)} />
 
-            {state?.message && (
-                <div
-                    className={`rounded-xl border p-3 text-sm ${state.status === "success"
-                        ? "border-green-200 bg-green-50 text-green-800"
-                        : "border-red-200 bg-red-50 text-red-700"
-                        }`}
-                >
-                    {state.message}
-                </div>
-            )}
-
             <div className="grid gap-6 md:grid-cols-2">
                 <label className="block">
                     <span className="text-sm font-medium text-neutral-800">Project Name</span>
@@ -64,12 +53,9 @@ export default function ProjectCreateForm() {
                         required
                         minLength={PROJECT_LIMITS.name.min}
                         maxLength={PROJECT_LIMITS.name.max}
-                        className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-lime-700 focus:outline-none"
+                        className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-lime/85 focus:outline-none"
                         placeholder="My Automation Toolkit"
                     />
-                    <p className="mt-1 text-xs text-neutral-500">
-                        {PROJECT_LIMITS.name.min}-{PROJECT_LIMITS.name.max} characters
-                    </p>
                     <FieldError errors={fieldErrors} name="name" />
                 </label>
 
@@ -81,13 +67,10 @@ export default function ProjectCreateForm() {
                         required
                         minLength={PROJECT_LIMITS.version.min}
                         maxLength={PROJECT_LIMITS.version.max}
-                        className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-lime-700 focus:outline-none"
+                        className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-lime/85 focus:outline-none"
                         placeholder="1.0.0"
                         pattern="[A-Za-z0-9._-]+"
                     />
-                    <p className="mt-1 text-xs text-neutral-500">
-                        Letters, numbers, dots, underscores, and dashes only.
-                    </p>
                     <FieldError errors={fieldErrors} name="version" />
                 </label>
             </div>
@@ -101,12 +84,9 @@ export default function ProjectCreateForm() {
                     required
                     minLength={PROJECT_LIMITS.shortDescription.min}
                     maxLength={PROJECT_LIMITS.shortDescription.max}
-                    className="mt-2 min-h-26 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-lime-700 focus:outline-none"
+                    className="mt-2 min-h-26 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-lime/85 focus:outline-none"
                     placeholder="What does this project do in one clear paragraph?"
                 />
-                <p className="mt-1 text-xs text-neutral-500">
-                    {PROJECT_LIMITS.shortDescription.min}-{PROJECT_LIMITS.shortDescription.max} characters
-                </p>
                 <FieldError errors={fieldErrors} name="shortDescription" />
             </label>
 
@@ -135,7 +115,7 @@ export default function ProjectCreateForm() {
                     />
                 </div>
                 <p className="text-xs text-neutral-500">
-                    Minimum {PROJECT_LIMITS.description.min} characters. Markdown is supported.
+                    Markdown is supported.
                 </p>
                 <FieldError errors={fieldErrors} name="description" />
             </div>
@@ -146,13 +126,10 @@ export default function ProjectCreateForm() {
                     name="tags"
                     type="text"
                     required
-                    className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-lime-700 focus:outline-none"
+                    className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-lime/85 focus:outline-none"
                     placeholder="automation, cc-tweaked, logistics"
                     maxLength={220}
                 />
-                <p className="mt-1 text-xs text-neutral-500">
-                    1-{PROJECT_LIMITS.tags.maxCount} tags. Each tag 2-24 chars.
-                </p>
                 <FieldError errors={fieldErrors} name="tags" />
             </label>
 
@@ -165,7 +142,6 @@ export default function ProjectCreateForm() {
                     accept=".ccproj"
                     className="mt-2 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
                 />
-                <p className="mt-1 text-xs text-neutral-500">Max size: 40 MB</p>
                 <FieldError errors={fieldErrors} name="projectFile" />
             </label>
 
@@ -184,9 +160,6 @@ export default function ProjectCreateForm() {
                         setMainImageIndex(0);
                     }}
                 />
-                <p className="mt-1 text-xs text-neutral-500">
-                    Upload 1-{PROJECT_LIMITS.maxImages} images (PNG/JPG/WEBP/GIF, max 8MB each).
-                </p>
                 <FieldError errors={fieldErrors} name="images" />
             </label>
 
@@ -222,16 +195,22 @@ export default function ProjectCreateForm() {
                 </div>
             )}
 
-            <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-sm text-neutral-700">
-                Every upload starts in review state. Admin must mark it as reviewed before it
-                appears on the community page.
-            </div>
+            {state?.message && (
+                <div
+                    className={`rounded-xl border p-3 text-sm ${state.status === "success"
+                        ? "border-green-200 bg-green-50 text-green-800"
+                        : "border-red-200 bg-red-50 text-red-700"
+                        }`}
+                >
+                    {state.message}
+                </div>
+            )}
 
             <div>
                 <button
                     type="submit"
                     disabled={pending}
-                    className="cursor-pointer rounded-lg bg-lime-700 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-lime-800 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="cursor-pointer rounded-lg bg-lime px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-lime/85 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     {pending ? "Uploading..." : "Create Project"}
                 </button>

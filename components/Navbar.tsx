@@ -99,7 +99,7 @@ export default function Navbar({ isAdmin = false }: NavbarProps) {
                 </SignInButton>
                 <SignUpButton mode="redirect" forceRedirectUrl="/dashboard">
                   <button
-                    className="cursor-pointer rounded-md bg-lime-700 px-3 py-2 font-medium text-white hover:bg-lime-800"
+                    className="cursor-pointer rounded-md bg-lime px-3 py-2 font-medium text-white hover:bg-lime/85"
                     type="button"
                   >
                     Register
@@ -150,7 +150,7 @@ export default function Navbar({ isAdmin = false }: NavbarProps) {
                 </SignInButton>
                 <SignUpButton mode="redirect" forceRedirectUrl="/dashboard">
                   <button
-                    className="w-full cursor-pointer rounded-md bg-lime-700 px-3 py-2 font-medium text-white hover:bg-lime-800"
+                    className="w-full cursor-pointer rounded-md bg-lime px-3 py-2 font-medium text-white hover:bg-lime/85"
                     type="button"
                     onClick={() => setIsMenuOpen(false)}
                   >

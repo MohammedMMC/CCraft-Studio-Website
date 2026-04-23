@@ -23,6 +23,10 @@ body {
   @apply bg-white text-neutral-900 font-mc;
 }
 
+.cardcb {
+  @apply border-4 bg-gray/90 shadow-gray border-l-white/35 border-t-white/35 border-b-white/25 border-r-white/25 shadow-[0_4px_0_0];
+}
+
 .preview-swiper {
   --swiper-theme-color: var(--primary);
   --swiper-navigation-size: 0.95rem;

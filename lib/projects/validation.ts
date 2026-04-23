@@ -9,7 +9,7 @@ export const PROJECT_LIMITS = {
     shortDescription: { min: 20, max: 240 },
     description: { min: 80, max: 20000 },
     version: { min: 1, max: 32 },
-    tags: { minCount: 1, maxCount: 12, minLength: 2, maxLength: 24 },
+    tags: { minCount: 1, maxCount: 6, minLength: 2, maxLength: 12 },
     links: { max: 500 },
     reviewLog: { max: 2500 },
     maxImages: 8,

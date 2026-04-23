@@ -53,7 +53,7 @@ export default function ProjectCard({ project, view = "user" }: ProjectCardProps
             <div className="flex flex-col gap-4 justify-between p-4 h-full">
                 <div className="flex flex-col gap-2">
                     <h3 className="font-semibold text-white line-clamp-1">{project.name}</h3>
-                    <p className="text-sm text-white/90 line-clamp-3">{project.shortDescription}</p>
+                    <p className="text-sm text-white/80 line-clamp-3">{project.shortDescription}</p>
                 </div>
                 {(view === "owner" || view === "user") && (
                     <div className="flex flex-col gap-2">
@@ -75,7 +75,7 @@ export default function ProjectCard({ project, view = "user" }: ProjectCardProps
                             </>
                         )}
                         <Link
-                            href={`/dashboard/projects/${project.id}`}
+                            href={`/projects/${project.id}`}
                             className="text-center cursor-pointer rounded-md bg-lime px-4 py-2 text-sm font-semibold text-white hover:bg-lime/85"
                         >View Project</Link>
                     </div>
@@ -116,6 +116,11 @@ export default function ProjectCard({ project, view = "user" }: ProjectCardProps
                                 </dd>
                             </div>
                         </dl>
+
+                        <Link
+                            href={`/projects/${project.id}`}
+                            className="inline-flex w-full justify-center rounded-md bg-lime px-4 py-2 text-sm font-semibold text-white hover:bg-lime/85"
+                        >Open Project Page</Link>
 
                         <form action={reviewProjectAction} className="space-y-2">
                             <input type="hidden" name="projectId" value={project.id} />

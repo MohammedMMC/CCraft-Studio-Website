@@ -175,7 +175,7 @@ export function validateCreateProjectForm(
         shortDescription.length > PROJECT_LIMITS.shortDescription.max
     ) {
         errors.shortDescription =
-            `Short description must be ${PROJECT_LIMITS.shortDescription.min}-${PROJECT_LIMITS.shortDescription.max} characters.`;
+            `Short description must be between ${PROJECT_LIMITS.shortDescription.min}-${PROJECT_LIMITS.shortDescription.max} characters.`;
     }
 
     const description = sanitizeMarkdown(String(formData.get("description") ?? ""));
@@ -184,7 +184,7 @@ export function validateCreateProjectForm(
         description.length > PROJECT_LIMITS.description.max
     ) {
         errors.description =
-            `Description must be ${PROJECT_LIMITS.description.min}-${PROJECT_LIMITS.description.max} characters.`;
+            `Description must be between ${PROJECT_LIMITS.description.min}-${PROJECT_LIMITS.description.max} characters.`;
     }
 
     const version = sanitizePlainText(String(formData.get("version") ?? ""));

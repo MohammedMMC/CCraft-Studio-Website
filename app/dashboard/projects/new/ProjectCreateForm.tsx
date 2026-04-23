@@ -53,7 +53,7 @@ export default function ProjectCreateForm() {
                         required
                         minLength={PROJECT_LIMITS.name.min}
                         maxLength={PROJECT_LIMITS.name.max}
-                        className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-lime/85 focus:outline-none"
+                        className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-gray/10 focus:outline-none"
                         placeholder="My Automation Toolkit"
                     />
                     <FieldError errors={fieldErrors} name="name" />
@@ -67,7 +67,7 @@ export default function ProjectCreateForm() {
                         required
                         minLength={PROJECT_LIMITS.version.min}
                         maxLength={PROJECT_LIMITS.version.max}
-                        className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-lime/85 focus:outline-none"
+                        className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-gray/10 focus:outline-none"
                         placeholder="1.0.0"
                         pattern="[A-Za-z0-9._-]+"
                     />
@@ -84,7 +84,7 @@ export default function ProjectCreateForm() {
                     required
                     minLength={PROJECT_LIMITS.shortDescription.min}
                     maxLength={PROJECT_LIMITS.shortDescription.max}
-                    className="mt-2 min-h-26 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-lime/85 focus:outline-none"
+                    className="mt-2 min-h-26 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-gray/10 focus:outline-none"
                     placeholder="What does this project do in one clear paragraph?"
                 />
                 <FieldError errors={fieldErrors} name="shortDescription" />
@@ -126,7 +126,7 @@ export default function ProjectCreateForm() {
                     name="tags"
                     type="text"
                     required
-                    className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-lime/85 focus:outline-none"
+                    className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-gray/10 focus:outline-none"
                     placeholder="automation, cc-tweaked, logistics"
                     maxLength={220}
                 />

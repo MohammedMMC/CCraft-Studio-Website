@@ -112,7 +112,7 @@ export default function ProjectCard({ project, view = "user" }: ProjectCardProps
                             <div>
                                 <dt className="font-semibold text-white">Metrics</dt>
                                 <dd className="text-white/70">
-                                    {project.downloads} downloads <br /> {project.likes} likes <br /> {project?._count?.comments} comments
+                                    {project.downloads} downloads <br /> {project.likes.length} likes <br /> {project?._count?.comments} comments
                                 </dd>
                             </div>
                         </dl>

@@ -13,7 +13,7 @@ export default function ImagePreviewButton({ src, ...props }: ButtonProps) {
         <>
             <Button
                 onClick={() => setOpen(true)}
-                className="px-2! py-1!"
+                className="px-1! py-1!"
                 colors="bg-gray/90 shadow-gray"
                 {...props}
             >
@@ -22,7 +22,7 @@ export default function ImagePreviewButton({ src, ...props }: ButtonProps) {
                     alt="Image"
                     width={640}
                     height={360}
-                    className="pointer-events-none select-none aspect-video h-auto w-full object-cover"
+                    className="pointer-events-none select-none rounded-xs aspect-video h-auto w-full object-cover"
                     loading="lazy"
                     unoptimized
                 />

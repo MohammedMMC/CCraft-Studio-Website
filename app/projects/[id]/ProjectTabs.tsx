@@ -5,7 +5,6 @@ import ProjectDescriptionMarkdown from "../../../components/ProjectDescriptionMa
 import Button from "@/components/Button";
 import ImagePreviewButton from "@/app/projects/[id]/ImagePreviewButton";
 import Image from "next/image";
-import { ReviewData } from "@prisma/client";
 import { requestProjectReview } from "./actions";
 import { usePathname } from "next/navigation";
 
@@ -19,7 +18,10 @@ type ProjectTabsProps = {
         url: string;
     }>;
     reviewed: boolean;
-    latestReview: ReviewData;
+    latestReview: {
+        message: string;
+        rejected: boolean;
+    };
     showSettings?: boolean;
 };
 
@@ -53,9 +55,9 @@ export default function ProjectTabs({
     latestReview,
     showSettings = false,
 }: ProjectTabsProps) {
-    const [activeTab, setActiveTab] = useState<TabKey>("description");
-    const [isRequestReviewPending, startRequestReviewPendingTransition] = useTransition();
     const pathname = usePathname();
+    const [activeTab, setActiveTab] = useState<TabKey>("description");
+    const [isRequestReviewPending, startRequestReviewTransition] = useTransition();
 
     useEffect(() => {
         const syncActiveTab = () => setActiveTab(resolveTabFromHash(window.location.hash, showSettings));
@@ -136,9 +138,9 @@ export default function ProjectTabs({
                     {latestReview.rejected && reviewed && (
                         <Button className="w-full justify-center gap-4!"
                             disabled={isRequestReviewPending}
-                            onClick={() => startRequestReviewPendingTransition(() => {
-                                requestProjectReview(projectId, pathname);
-                            })}>
+                            onClick={() => startRequestReviewTransition(() =>
+                                requestProjectReview(projectId, pathname)
+                            )}>
                             <Image className="select-none pointer-events-none drop-shadow-[0_2px_0] drop-shadow-lime" src="/icons/eye.svg" alt="Review Icon" width={24} height={24} />
                             Request Review
                         </Button>)}
@@ -153,7 +155,8 @@ export default function ProjectTabs({
                         </Button>
                     </div>
                 </section>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 }

@@ -41,7 +41,7 @@ model Project {
   projectFileName  String
   projectFileSize  Int
   downloads        Int          @default(0)
-  likes            Int          @default(0)
+  likes            String[]     @default([])
   reviewed         Boolean      @default(false)
   reviewLog        ReviewData[]
   publishDate      DateTime

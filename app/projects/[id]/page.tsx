@@ -8,21 +8,6 @@ import { formatDate } from "../../../lib/projects/validation";
 import Button from "@/components/Button";
 import ProjectTabs from "./ProjectTabs";
 
-function getStatus(reviewed: boolean, rejected?: boolean) {
-    if (!reviewed) return {
-        label: "In Review",
-        className: "border-amber-200/50 bg-amber-200/10 text-amber-300/90",
-    };
-    if (rejected) return {
-        label: "Rejected",
-        className: "border-red-400/50 bg-red-700/10 text-red-300/90",
-    };
-    return {
-        label: "Approved",
-        className: "border-lime/50 bg-lime/10 text-lime",
-    };
-}
-
 export default async function ProjectDetailsPage({
     params,
 }: { params: Promise<{ id: string; }>; }) {
@@ -47,16 +32,6 @@ export default async function ProjectDetailsPage({
                     images: { orderBy: [{ isMain: "desc" }, { createdAt: "asc" }], },
                     reviewLog: {
                         orderBy: { reviewedAt: "desc" }, take: 1,
-                        include: {
-                            reviewedBy: {
-                                select: {
-                                    firstName: true,
-                                    lastName: true,
-                                    email: true,
-                                    imageUrl: true,
-                                },
-                            },
-                        },
                     },
                     _count: { select: { comments: true, }, },
                 },
@@ -79,12 +54,11 @@ export default async function ProjectDetailsPage({
     }) : null;
 
     const viewerHasAccess = viewer?.role === "ADMIN" || viewer?.id === project.ownerId;
-    
+
     if (project.reviewLog[project.reviewLog.length - 1]?.rejected && !viewerHasAccess) notFound();
 
     const previewImage = project.images.find((image) => image.isMain) ?? project.images[0] ?? null;
     const latestReview = project.reviewLog[0];
-    const status = getStatus(project.reviewed, latestReview?.rejected);
     const ownerName = [project.owner?.firstName, project.owner?.lastName].filter(Boolean).join(" ");
     return (
         <ScreenLayout>
@@ -138,11 +112,11 @@ export default async function ProjectDetailsPage({
 
                 <div className="grid gap-6 md:grid-cols-[1.8fr_1fr] grid-cols-1">
                     <ProjectTabs
+                        projectId={project.id}
+                        latestReview={latestReview}
+                        reviewed={project.reviewed}
                         description={project.description}
                         images={project.images.map((image) => ({ id: image.id, url: image.url }))}
-                        statusLabel={status.label}
-                        statusClassName={status.className}
-                        latestReviewMessage={latestReview?.message}
                         showSettings={viewerHasAccess}
                     />
 
@@ -178,8 +152,8 @@ export default async function ProjectDetailsPage({
                             <div className="flex flex-row items-center gap-3">
                                 <Image className="rounded-xs" src={project.owner?.imageUrl || "/images/icon.png"} loading="lazy" alt="User Image" width={64} height={64} />
                                 <div className="flex flex-col gap-1">
-                                    <span className="text-white/80 font-semibold">{ownerName || "Unnamed User"}</span>
-                                    <span className="text-sm text-white/60">{project.owner?.role == "ADMIN" ? "Administrator" : "Member"}</span>
+                                    <span className="text-white/90 font-semibold">{ownerName || "Unnamed User"}</span>
+                                    <span className="text-sm text-white/75">{project.owner?.role == "ADMIN" ? "Administrator" : "Member"}</span>
                                 </div>
                             </div>
                         </div>

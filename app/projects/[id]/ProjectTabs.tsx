@@ -1,24 +1,42 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import ProjectDescriptionMarkdown from "../../../components/ProjectDescriptionMarkdown";
 import Button from "@/components/Button";
 import ImagePreviewButton from "@/app/projects/[id]/ImagePreviewButton";
 import Image from "next/image";
+import { ReviewData } from "@prisma/client";
+import { requestProjectReview } from "./actions";
+import { usePathname } from "next/navigation";
 
 type TabKey = "description" | "images" | "settings";
 
 type ProjectTabsProps = {
+    projectId: string;
     description: string;
     images: Array<{
         id: string;
         url: string;
     }>;
-    statusLabel: string;
-    statusClassName: string;
-    latestReviewMessage?: string;
+    reviewed: boolean;
+    latestReview: ReviewData;
     showSettings?: boolean;
 };
+
+function getStatus(reviewed: boolean, rejected?: boolean) {
+    if (!reviewed) return {
+        label: "In Review",
+        className: "shadow-yellow-500! bg-yellow-400/85! text-shadow-yellow-500",
+    };
+    if (rejected) return {
+        label: "Rejected",
+        className: "shadow-red-500! bg-red-400/85! text-shadow-red-500",
+    };
+    return {
+        label: "Approved",
+        className: "shadow-lime! bg-lime/85! text-shadow-lime",
+    };
+}
 
 function resolveTabFromHash(hash: string, showSettings: boolean): TabKey {
     const cleanHash = hash.replace("#", "").toLowerCase();
@@ -28,14 +46,16 @@ function resolveTabFromHash(hash: string, showSettings: boolean): TabKey {
 }
 
 export default function ProjectTabs({
+    projectId,
     description,
     images,
-    statusLabel,
-    statusClassName,
-    latestReviewMessage,
+    reviewed,
+    latestReview,
     showSettings = false,
 }: ProjectTabsProps) {
     const [activeTab, setActiveTab] = useState<TabKey>("description");
+    const [isRequestReviewPending, startRequestReviewPendingTransition] = useTransition();
+    const pathname = usePathname();
 
     useEffect(() => {
         const syncActiveTab = () => setActiveTab(resolveTabFromHash(window.location.hash, showSettings));
@@ -57,7 +77,7 @@ export default function ProjectTabs({
         ? "bg-primary/85 text-shadow-primary shadow-primary"
         : "bg-gray/85 text-shadow-gray shadow-gray";
 
-
+    const statusData = getStatus(reviewed, latestReview.rejected);
 
     return (
         <div className="space-y-4">
@@ -105,27 +125,29 @@ export default function ProjectTabs({
 
             {showSettings && activeTab === "settings" && (
                 <section id="settings" className="space-y-4">
-                    <div className="cardcb p-4">
-                        <h1 className="font-semibold text-white mb-4 tracking-wider">Reviews</h1>
+                    <div className={"cardcb p-4 text-shadow-[0_2px] " + statusData.className}>
+                        <h1 className="font-semibold text-white tracking-wider">Status: <span>{statusData.label}</span></h1>
 
-                        <div className="space-y-3 rounded-sm bg-white p-4 text-sm text-neutral-700">
-                            <p className={`inline-block rounded-sm border px-2 py-1 text-xs ${statusClassName}`}>
-                                Status: {statusLabel}
-                            </p>
-                            <p>
-                                {latestReviewMessage
-                                    ? `Latest review message: ${latestReviewMessage}`
-                                    : "No review message yet."}
-                            </p>
-                        </div>
+                        {reviewed && latestReview.message && (
+                            <p className="text-sm text-white/90 mt-2">{(latestReview.rejected ? "Reason: " : "Message: ")} <span>{latestReview.message}</span></p>
+                        )}
                     </div>
 
+                    {latestReview.rejected && reviewed && (
+                        <Button className="w-full justify-center gap-4!"
+                            disabled={isRequestReviewPending}
+                            onClick={() => startRequestReviewPendingTransition(() => {
+                                requestProjectReview(projectId, pathname);
+                            })}>
+                            <Image className="select-none pointer-events-none drop-shadow-[0_2px_0] drop-shadow-lime" src="/icons/eye.svg" alt="Review Icon" width={24} height={24} />
+                            Request Review
+                        </Button>)}
                     <div className="w-full flex sm:flex-row flex-col gap-3">
-                        <Button className="w-full justify-center gap-4!" colors="bg-red-400 text-shadow-red-400 shadow-red-400/85">
-                            <Image className="select-none pointer-events-none drop-shadow-[0_2px_0] drop-shadow-red-400" src="/icons/trash.svg" alt="Delete Icon" width={24} height={24} />
+                        <Button className="w-full justify-center gap-4!" colors="bg-red-400/85 text-shadow-red-500 shadow-red-500">
+                            <Image className="select-none pointer-events-none drop-shadow-[0_2px_0] drop-shadow-red-500" src="/icons/trash.svg" alt="Delete Icon" width={24} height={24} />
                             Delete Project
                         </Button>
-                        <Button className="w-full justify-center gap-4!" colors="bg-blue-400 text-shadow-blue-400 shadow-blue-400/85">
+                        <Button className="w-full justify-center gap-4!" colors="bg-blue-400/85 text-shadow-blue-400 shadow-blue-400">
                             <Image className="select-none pointer-events-none drop-shadow-[0_2px_0] drop-shadow-blue-400" src="/icons/pen.svg" alt="Edit Icon" width={24} height={24} />
                             Edit Project
                         </Button>

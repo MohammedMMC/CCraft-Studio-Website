@@ -20,6 +20,7 @@ export default function Button({
                 transition-all duration-150 ease-in-out
                 active:shadow-[0_0px_0_0] active:translate-y-1
                 flex flex-row gap-3 items-center
+                disabled:grayscale-25 disabled:opacity-70 disabled:cursor-not-allowed
                 ${className || ''}
             `}
         >

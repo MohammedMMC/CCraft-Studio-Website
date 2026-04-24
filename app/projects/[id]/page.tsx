@@ -41,6 +41,8 @@ export default async function ProjectDetailsPage({
                             firstName: true,
                             lastName: true,
                             email: true,
+                            imageUrl: true,
+                            role: true,
                         },
                     },
                     images: { orderBy: [{ isMain: "desc" }, { createdAt: "asc" }], },
@@ -52,6 +54,7 @@ export default async function ProjectDetailsPage({
                                     firstName: true,
                                     lastName: true,
                                     email: true,
+                                    imageUrl: true,
                                 },
                             },
                         },
@@ -104,6 +107,17 @@ export default async function ProjectDetailsPage({
                         <h1 className="text-2xl font-bold">{project.name}</h1>
                         <p className="text-sm text-neutral-900/80 line-clamp-2">{project.shortDescription}</p>
                         <div className="flex flex-row gap-2 mt-auto">
+                            <div className="flex flex-row gap-1 items-center mr-3">
+                                <span aria-hidden="true"
+                                    className="size-5 bg-neutral-700 [mask:url('/icons/heart.svg')_center/contain_no-repeat]"
+                                />
+                                <span className="mr-2 text-xs text-neutral-700 ml-1">{project.likes}</span>
+                                <span aria-hidden="true"
+                                    className="size-5 bg-neutral-700 [mask:url('/icons/download.svg')_center/contain_no-repeat]"
+                                />
+                                <span className="text-xs text-neutral-700 ml-1">{project.downloads}</span>
+                            </div>
+
                             {project.tags.map((tag) => (
                                 <span
                                     key={tag}
@@ -114,14 +128,68 @@ export default async function ProjectDetailsPage({
                             ))}
                         </div>
                     </div>
-                    <div className="ml-auto">
-                        <Button className="h-min" colors={false ? `bg-red-500/80 shadow-red-900` : `bg-gray/80 shadow-gray`}>
-                            <Image className={`select-none pointer-events-none` + (false ? "" : " saturate-0")} src="/icons/heart.svg" alt="Heart" width={32} height={32} />
+                    <div className="ml-auto flex flex-row gap-2 h-16">
+                        <Button className="h-full" colors={false ? `bg-red-500/80 shadow-red-900` : `bg-gray/80 shadow-gray`}>
+                            <Image className={`select-none pointer-events-none` + (false ? "" : " saturate-0")} src="/icons/heart-colored.svg" alt="Heart Icon" width={32} height={32} />
+                        </Button>
+                        <Button className="h-full" colors="text-shadow-lime bg-lime/80 shadow-lime">
+                            <Image className="select-none pointer-events-none drop-shadow-[0_2px_0] drop-shadow-lime" src="/icons/download.svg" alt="Download Icon" width={24} height={24} />
+                            Download
                         </Button>
                     </div>
-                    {/* <p className={`rounded-sm border px-3 py-1 text-xs ${status.className}`}>
-                        Status: {status.label}
-                    </p> */}
+                </div>
+                {/* Line */}
+                <div className="h-1 bg-gray/50"></div>
+
+                <div className="grid gap-6 md:grid-cols-[1.8fr_1fr] grid-cols-1">
+                    <div className="w-full">
+                        <div className="flex flex-row gap-3">
+                            <Button className="px-4! py-2! text-sm! h-min!">Description</Button>
+                            <Button className="px-4! py-2! text-sm! h-min!">Images</Button>
+                            <Button className="px-4! py-2! text-sm! h-min!" colors="bg-blue-400/85 text-shadow-blue-400 shadow-blue-400">Settings</Button>
+                        </div>
+                    </div>
+
+                    <aside className="space-y-4">
+                        <div className="space-y-2 cardcb p-4">
+                            <h1 className="font-semibold text-white mb-4! tracking-wider">Details</h1>
+                            <div className="flex flex-row items-center gap-2">
+                                <Image className="select-none pointer-events-none" src="/icons/plant.svg" alt="Plant Icon" width={16} height={16} />
+                                <span className="text-white/80">Version <span className="text-white/90">{project.version}</span></span>
+                            </div>
+                            <div className="flex flex-row items-center gap-2">
+                                <Image className="select-none pointer-events-none" src="/icons/clock.svg" alt="Clock Icon" width={16} height={16} />
+                                <span className="text-white/80">Published <span className="text-white/90">{formatDate(project.publishDate, true)}</span></span>
+                            </div>
+                            <div className="flex flex-row items-center gap-2">
+                                <Image className="select-none pointer-events-none" src="/icons/clock.svg" alt="Clock Icon" width={16} height={16} />
+                                <span className="text-white/80">Updated <span className="text-white/90">{formatDate(project.projectUpdatedAt, true)}</span></span>
+                            </div>
+                        </div>
+                        <div className="space-y-2 cardcb p-4">
+                            <h1 className="font-semibold text-white mb-4! tracking-wider">Tags</h1>
+                            <div className="flex flex-row gap-2 flex-wrap">
+                                {project.tags.map((tag) => (
+                                    <span
+                                        key={tag}
+                                        className="cardcb border-3! shadow-[0_2px_0_0]! px-2 py-1 text-xs text-white/80"
+                                    >
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="space-y-2 cardcb p-4">
+                            <h1 className="font-semibold text-white mb-4! tracking-wider">Creator</h1>
+                            <div className="flex flex-row items-center gap-3">
+                                <Image className="rounded-sm" src={project.owner?.imageUrl || ""} loading="lazy" alt="User Image" width={64} height={64} />
+                                <div className="flex flex-col gap-1">
+                                    <span className="text-white/80 font-semibold">{ownerName || "Unnamed User"}</span>
+                                    <span className="text-sm text-white/60">{project.owner?.role == "ADMIN" ? "Administrator" : "Member"}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
 
                 <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
@@ -159,8 +227,8 @@ export default async function ProjectDetailsPage({
                         ) : null}
                     </article>
 
-                    <aside className="space-y-4 rounded-sm border border-neutral-200 bg-white p-4">
-                        <h2 className="text-sm font-semibold text-neutral-900">Project Info</h2>
+                    <aside className="space-y-4 cardcb p-4">
+                        <h2 className="font-semibold text-white">Details</h2>
 
                         <dl className="space-y-3 text-sm text-neutral-700">
                             <div>
@@ -232,11 +300,6 @@ export default async function ProjectDetailsPage({
                         </div>
                     </aside>
                 </div>
-
-                <article className="space-y-3 rounded-sm border border-neutral-200 bg-white p-4">
-                    <h2 className="text-sm font-semibold text-neutral-900">Short Description</h2>
-                    <p className="text-sm text-neutral-700">{project.shortDescription}</p>
-                </article>
 
                 <article className="space-y-3 rounded-sm border border-neutral-200 bg-white p-4">
                     <h2 className="text-sm font-semibold text-neutral-900">Description</h2>

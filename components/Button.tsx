@@ -8,6 +8,7 @@ export default function Button({ children, className, colors }: { children: Reac
             border-b-white/25 border-r-white/25
             transition-all duration-150 ease-in-out
             active:shadow-[0_0px_0_0] active:translate-y-1
+            flex flex-row gap-3 items-center
             ${className || ''}
             `}>
             {children}

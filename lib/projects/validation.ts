@@ -1,3 +1,10 @@
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+
+TimeAgo.addDefaultLocale(en);
+
+export const timeAgo = new TimeAgo("en-US");
+
 const PLAIN_TEXT_CONTROL_CHARS = /[\u0000-\u0008\u000B-\u001F\u007F]/g;
 const SCRIPT_TAG_PATTERN = /<\s*script\b[^>]*>[\s\S]*?<\s*\/\s*script\s*>/gi;
 const JAVASCRIPT_PROTOCOL_PATTERN = /javascript\s*:/gi;
@@ -17,8 +24,9 @@ export const PROJECT_LIMITS = {
     maxProjectFileSizeBytes: 40 * 1024 * 1024,
 } as const;
 
-export function formatDate(date: Date): string {
-    return date.toLocaleDateString();
+export function formatDate(date: Date, fromStr: boolean = false): string {
+    if (!fromStr) return date.toLocaleDateString();
+    return timeAgo.format(date);
 }
 
 export function formatBytes(size: number): string {

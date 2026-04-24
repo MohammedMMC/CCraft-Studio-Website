@@ -6,6 +6,7 @@ import { CreateProjectFieldErrors, validateCreateProjectForm } from "@/lib/proje
 import { auth } from "@clerk/nextjs/server";
 import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export type CreateProjectActionState = {
     status: "idle" | "success" | "error";
@@ -124,7 +125,7 @@ export async function createProjectAction(
             ),
         );
 
-        await prisma.project.create({
+        const createdProject = await prisma.project.create({
             data: {
                 ownerId: user.id,
                 name: payload.name,
@@ -148,17 +149,15 @@ export async function createProjectAction(
                     })),
                 },
             },
+            select: {
+                id: true,
+            },
         });
 
         revalidatePath("/dashboard");
         revalidatePath("/dashboard/admin");
 
-        return {
-            status: "success",
-            message:
-                "Project uploaded successfully. It is now in review state and will appear in Community page after admin approval.",
-            fieldErrors: {},
-        };
+        redirect(`/projects/${createdProject.id}#settings`);
     } catch (error) {
         console.error("createProjectAction failed", error);
 

@@ -1,13 +1,12 @@
 import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import ScreenLayout from "../../../components/ScreenLayout";
-import ProjectDescriptionMarkdown from "../../../components/ProjectDescriptionMarkdown";
 import { prisma } from "../../../lib/prisma";
 import { isMissingProjectTablesError } from "../../../lib/projects/db-guards";
-import { formatBytes, formatDate } from "../../../lib/projects/validation";
+import { formatDate } from "../../../lib/projects/validation";
 import Button from "@/components/Button";
+import ProjectTabs from "./ProjectTabs";
 
 function getStatus(reviewed: boolean, rejected?: boolean) {
     if (!reviewed) return {
@@ -72,23 +71,21 @@ export default async function ProjectDetailsPage({
 
     if (!project) notFound();
 
-    if (!project.reviewed) {
-        const { userId } = await auth();
-        if (!userId) redirect("/auth/sign-in");
+    const { userId } = await auth();
+    if (!project.reviewed && !userId) redirect("/auth/sign-in");
+    const viewer = userId ? await prisma.user.findUnique({
+        where: { clerkId: userId },
+        select: { id: true, role: true, },
+    }) : null;
 
-        const viewer = await prisma.user.findUnique({
-            where: { clerkId: userId },
-            select: { id: true, role: true, },
-        });
-        if (viewer?.role !== "ADMIN" && viewer?.id !== project.ownerId) notFound();
-    }
+    const viewerHasAccess = viewer?.role === "ADMIN" || viewer?.id === project.ownerId;
+    
+    if (project.reviewLog[project.reviewLog.length - 1]?.rejected && !viewerHasAccess) notFound();
 
     const previewImage = project.images.find((image) => image.isMain) ?? project.images[0] ?? null;
     const latestReview = project.reviewLog[0];
     const status = getStatus(project.reviewed, latestReview?.rejected);
     const ownerName = [project.owner?.firstName, project.owner?.lastName].filter(Boolean).join(" ");
-    const reviewerName = [latestReview?.reviewedBy?.firstName, latestReview?.reviewedBy?.lastName].filter(Boolean).join(" ");
-
     return (
         <ScreenLayout>
             <section className="space-y-6">
@@ -99,13 +96,13 @@ export default async function ProjectDetailsPage({
                             alt={`${project.name} preview`}
                             width={100}
                             height={100}
-                            className="h-auto w-56 object-cover aspect-video"
+                            className="h-auto rounded-xs w-56 object-cover aspect-video"
                             unoptimized
                         />
                     )}
-                    <div className="h-auto p-2 flex flex-col gap-2">
+                    <div className="h-auto p-2 flex flex-col gap-2 max-w-[calc(100%-14rem-2rem)]">
                         <h1 className="text-2xl font-bold">{project.name}</h1>
-                        <p className="text-sm text-neutral-900/80 line-clamp-2">{project.shortDescription}</p>
+                        <p className="text-sm text-neutral-900/80 line-clamp-3">{project.shortDescription}</p>
                         <div className="flex flex-row gap-2 mt-auto">
                             <div className="flex flex-row gap-1 items-center mr-3">
                                 <span aria-hidden="true"
@@ -118,13 +115,11 @@ export default async function ProjectDetailsPage({
                                 <span className="text-xs text-neutral-700 ml-1">{project.downloads}</span>
                             </div>
 
-                            {project.tags.map((tag) => (
+                            {project.tags.slice(0, 3).map((tag) => (
                                 <span
                                     key={tag}
                                     className="cardcb border-3! shadow-[0_2px_0_0]! px-2 py-1 text-xs text-white/80"
-                                >
-                                    {tag}
-                                </span>
+                                >{tag}</span>
                             ))}
                         </div>
                     </div>
@@ -138,51 +133,50 @@ export default async function ProjectDetailsPage({
                         </Button>
                     </div>
                 </div>
-                {/* Line */}
+
                 <div className="h-1 bg-gray/50"></div>
 
                 <div className="grid gap-6 md:grid-cols-[1.8fr_1fr] grid-cols-1">
-                    <div className="w-full">
-                        <div className="flex flex-row gap-3">
-                            <Button className="px-4! py-2! text-sm! h-min!">Description</Button>
-                            <Button className="px-4! py-2! text-sm! h-min!">Images</Button>
-                            <Button className="px-4! py-2! text-sm! h-min!" colors="bg-blue-400/85 text-shadow-blue-400 shadow-blue-400">Settings</Button>
-                        </div>
-                    </div>
+                    <ProjectTabs
+                        description={project.description}
+                        images={project.images.map((image) => ({ id: image.id, url: image.url }))}
+                        statusLabel={status.label}
+                        statusClassName={status.className}
+                        latestReviewMessage={latestReview?.message}
+                        showSettings={viewerHasAccess}
+                    />
 
                     <aside className="space-y-4">
                         <div className="space-y-2 cardcb p-4">
-                            <h1 className="font-semibold text-white mb-4! tracking-wider">Details</h1>
+                            <h1 className="font-semibold text-white mb-4 tracking-wider">Details</h1>
                             <div className="flex flex-row items-center gap-2">
                                 <Image className="select-none pointer-events-none" src="/icons/plant.svg" alt="Plant Icon" width={16} height={16} />
                                 <span className="text-white/80">Version <span className="text-white/90">{project.version}</span></span>
                             </div>
                             <div className="flex flex-row items-center gap-2">
                                 <Image className="select-none pointer-events-none" src="/icons/clock.svg" alt="Clock Icon" width={16} height={16} />
-                                <span className="text-white/80">Published <span className="text-white/90">{formatDate(project.publishDate, true)}</span></span>
+                                <span className="text-white/80">Published <span className="text-white/90">{formatDate(project.publishDate)}</span></span>
                             </div>
                             <div className="flex flex-row items-center gap-2">
                                 <Image className="select-none pointer-events-none" src="/icons/clock.svg" alt="Clock Icon" width={16} height={16} />
-                                <span className="text-white/80">Updated <span className="text-white/90">{formatDate(project.projectUpdatedAt, true)}</span></span>
+                                <span className="text-white/80">Updated <span className="text-white/90">{formatDate(project.projectUpdatedAt)}</span></span>
                             </div>
                         </div>
                         <div className="space-y-2 cardcb p-4">
-                            <h1 className="font-semibold text-white mb-4! tracking-wider">Tags</h1>
+                            <h1 className="font-semibold text-white mb-4 tracking-wider">Tags</h1>
                             <div className="flex flex-row gap-2 flex-wrap">
                                 {project.tags.map((tag) => (
                                     <span
                                         key={tag}
                                         className="cardcb border-3! shadow-[0_2px_0_0]! px-2 py-1 text-xs text-white/80"
-                                    >
-                                        {tag}
-                                    </span>
+                                    >{tag}</span>
                                 ))}
                             </div>
                         </div>
                         <div className="space-y-2 cardcb p-4">
-                            <h1 className="font-semibold text-white mb-4! tracking-wider">Creator</h1>
+                            <h1 className="font-semibold text-white mb-4 tracking-wider">Creator</h1>
                             <div className="flex flex-row items-center gap-3">
-                                <Image className="rounded-sm" src={project.owner?.imageUrl || ""} loading="lazy" alt="User Image" width={64} height={64} />
+                                <Image className="rounded-xs" src={project.owner?.imageUrl || "/images/icon.png"} loading="lazy" alt="User Image" width={64} height={64} />
                                 <div className="flex flex-col gap-1">
                                     <span className="text-white/80 font-semibold">{ownerName || "Unnamed User"}</span>
                                     <span className="text-sm text-white/60">{project.owner?.role == "ADMIN" ? "Administrator" : "Member"}</span>
@@ -190,148 +184,6 @@ export default async function ProjectDetailsPage({
                             </div>
                         </div>
                     </aside>
-                </div>
-
-                <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-                    <article className="overflow-hidden rounded-sm border-4 border-l-white/35 border-t-white/35 border-b-white/25 border-r-white/25 bg-gray/90 text-white shadow-[0_4px_0_0] shadow-gray">
-                        {previewImage ? (
-                            <Image
-                                src={previewImage.url}
-                                alt={`${project.name} preview`}
-                                width={1400}
-                                height={820}
-                                className="h-auto w-full object-cover"
-                                unoptimized
-                            />
-                        ) : (
-                            <div className="flex aspect-video items-center justify-center bg-gray/80 px-4 text-center text-sm text-white/80">
-                                No preview image was uploaded for this project.
-                            </div>
-                        )}
-
-                        {project.images.length > 1 ? (
-                            <div className="grid gap-2 border-t border-white/20 p-3 sm:grid-cols-2 lg:grid-cols-3">
-                                {project.images.slice(0, 6).map((image) => (
-                                    <Image
-                                        key={image.id}
-                                        src={image.url}
-                                        alt={`${project.name} image`}
-                                        width={640}
-                                        height={360}
-                                        className="aspect-video h-auto w-full rounded-sm object-cover"
-                                        loading="lazy"
-                                        unoptimized
-                                    />
-                                ))}
-                            </div>
-                        ) : null}
-                    </article>
-
-                    <aside className="space-y-4 cardcb p-4">
-                        <h2 className="font-semibold text-white">Details</h2>
-
-                        <dl className="space-y-3 text-sm text-neutral-700">
-                            <div>
-                                <dt className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                                    Owner
-                                </dt>
-                                <dd>
-                                    {ownerName || "Unnamed User"}
-                                    {project.owner?.email ? ` (${project.owner.email})` : ""}
-                                </dd>
-                            </div>
-
-                            <div>
-                                <dt className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                                    Version
-                                </dt>
-                                <dd>{project.version}</dd>
-                            </div>
-
-                            <div>
-                                <dt className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                                    Published
-                                </dt>
-                                <dd>{formatDate(project.publishDate)}</dd>
-                            </div>
-
-                            <div>
-                                <dt className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                                    Last Updated
-                                </dt>
-                                <dd>{formatDate(project.projectUpdatedAt)}</dd>
-                            </div>
-
-                            <div>
-                                <dt className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                                    Metrics
-                                </dt>
-                                <dd>
-                                    {project.downloads} downloads | {project.likes} likes | {project._count.comments} comments
-                                </dd>
-                            </div>
-
-                            <div>
-                                <dt className="text-xs font-semibold uppercase tracking-wide text-neutral-500">
-                                    Tags
-                                </dt>
-                                <dd className="flex flex-wrap gap-2">
-                                    {project.tags.map((tag) => (
-                                        <span
-                                            key={tag}
-                                            className="rounded-sm border border-neutral-300 bg-neutral-50 px-2 py-1 text-xs"
-                                        >
-                                            {tag}
-                                        </span>
-                                    ))}
-                                </dd>
-                            </div>
-                        </dl>
-
-                        <div className="space-y-2 border-t border-neutral-200 pt-3 text-sm">
-                            <p className="font-semibold text-neutral-900">Download Package</p>
-                            <Link
-                                href={project.projectFileUrl}
-                                download
-                                className="inline-flex rounded-sm bg-lime px-3 py-2 font-semibold text-white hover:bg-lime/85"
-                            >
-                                {project.projectFileName} ({formatBytes(project.projectFileSize)})
-                            </Link>
-                        </div>
-                    </aside>
-                </div>
-
-                <article className="space-y-3 rounded-sm border border-neutral-200 bg-white p-4">
-                    <h2 className="text-sm font-semibold text-neutral-900">Description</h2>
-                    <div className="prose prose-sm max-w-none text-neutral-700">
-                        <ProjectDescriptionMarkdown content={project.description} />
-                    </div>
-                </article>
-
-                {latestReview ? (
-                    <article className="space-y-3 rounded-sm border border-neutral-200 bg-white p-4">
-                        <h2 className="text-sm font-semibold text-neutral-900">Latest Review</h2>
-                        <p className="text-sm text-neutral-700">
-                            <span className="font-semibold">Reviewed on:</span> {formatDate(latestReview.reviewedAt)}
-                            {reviewerName ? ` by ${reviewerName}` : ""}
-                        </p>
-                        <p className="text-sm text-neutral-700">{latestReview.message}</p>
-                    </article>
-                ) : null}
-
-                <div className="flex items-center gap-3">
-                    <Link
-                        href="/community"
-                        className="rounded-sm border border-neutral-300 px-3 py-2 text-sm font-semibold text-neutral-800 hover:bg-neutral-100"
-                    >
-                        Back to Community
-                    </Link>
-                    <Link
-                        href="/dashboard"
-                        className="rounded-sm border border-neutral-300 px-3 py-2 text-sm font-semibold text-neutral-800 hover:bg-neutral-100"
-                    >
-                        Back to Dashboard
-                    </Link>
                 </div>
             </section>
         </ScreenLayout>

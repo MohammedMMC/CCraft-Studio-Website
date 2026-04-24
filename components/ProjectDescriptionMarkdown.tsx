@@ -10,12 +10,12 @@ export default function ProjectDescriptionMarkdown({
   content,
 }: ProjectDescriptionMarkdownProps) {
   return (
-    <div data-color-mode="light">
+    <div data-color-mode="dark">
       <MDEditor.Markdown
         source={content}
         style={{
           backgroundColor: "transparent",
-          color: "inherit",
+          fontFamily: "inherit",
         }}
       />
     </div>

@@ -4,7 +4,7 @@ import ProjectCreateForm from "./ProjectCreateForm";
 export default function NewProjectPage() {
     return (
         <ScreenLayout>
-            <section className="rounded-md border-4 border-neutral-200 bg-red p-6">
+            <section className="border-4 border-neutral-200 p-6">
                 <h1 className="text-xl font-semibold">Create Project</h1>
                 <p className="mt-2 text-sm text-neutral-600">Upload your .ccproj file, add project details, and submit it for review.</p>
 

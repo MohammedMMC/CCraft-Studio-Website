@@ -1,10 +1,9 @@
 @import "tailwindcss";
 :root {
-  
   --color-white: #fbfeff;
   --color-lime: #70a544;
-  --color-gray: #3E3937;
-  
+  --color-gray: #3e3937;
+
   --secondary: #fbfeff;
   --primary: var(--color-lime);
 }
@@ -25,6 +24,199 @@ body {
 
 .cardcb {
   @apply border-4 bg-gray/90 shadow-gray border-l-white/35 border-t-white/35 border-b-white/25 border-r-white/25 shadow-[0_4px_0_0];
+}
+
+:where(
+  input:not([type="hidden"]):not([type="radio"]):not([type="checkbox"]),
+  select,
+  textarea
+) {
+  @apply border-4 bg-gray/90 text-white shadow-gray border-l-white/35 border-t-white/35 border-b-white/25 border-r-white/25 shadow-[0_4px_0_0] rounded-none! transition-all! duration-150! ease-in-out!;
+  transition:
+    box-shadow 120ms ease,
+    transform 120ms ease,
+    border-color 120ms ease;
+}
+
+:where(
+  input:not([type="hidden"]):not([type="radio"]):not([type="checkbox"]),
+  select,
+  textarea
+)::placeholder {
+  @apply text-white/75!;
+}
+
+:where(
+  input:not([type="hidden"]):not([type="radio"]):not([type="checkbox"]),
+  select,
+  textarea
+):focus-visible {
+  @apply shadow-[0_2px]! outline-none! translate-y-0.5;
+}
+
+select {
+  cursor: pointer;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input[type="file"] {
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button {
+  @apply cursor-pointer rounded-none! mr-3 mb-1 border-4 bg-lime/90 text-white shadow-lime border-l-white/35 border-t-white/35 border-b-white/25 border-r-white/25 shadow-[0_3px_0_0] px-3 py-1 text-xs font-semibold;
+  transition:
+    box-shadow 120ms ease,
+    transform 120ms ease,
+    filter 120ms ease;
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--primary);
+  border-radius: 0;
+  background-color: var(--color-white);
+  display: inline-grid;
+  place-content: center;
+  cursor: pointer;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: 0.25rem;
+  height: 0.5rem;
+  border: solid var(--color-lime);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transform-origin: bottom left;
+  transition: transform 0.12s ease-in-out;
+}
+
+input[type="checkbox"]:checked::before {
+  transform: rotate(45deg) scale(1);
+}
+
+input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--color-lime);
+  outline-offset: 2px;
+}
+
+:where(.w-md-editor, .wmde-markdown, .wmde-markdown-var) {
+  @apply font-mc!;
+  --md-editor-background-color: color-mix(
+    in srgb,
+    var(--color-gray) 90%,
+    transparent
+  ) !important;
+  --md-editor-box-shadow-color: color-mix(
+    in srgb,
+    var(--color-white) 28%,
+    transparent
+  ) !important;
+  --color-canvas-default: color-mix(
+    in srgb,
+    var(--color-gray) 90%,
+    transparent
+  ) !important;
+  --color-fg-default: var(--color-white);
+  --color-border-default: color-mix(
+    in srgb,
+    var(--color-white) 28%,
+    transparent
+  ) !important;
+  --color-neutral-muted: color-mix(
+    in srgb,
+    var(--color-white) 12%,
+    transparent
+  ) !important;
+  --color-accent-fg: var(--color-lime) !important;
+}
+
+.w-md-editor {
+  @apply border-4! shadow-gray! border-l-white/35! border-t-white/35! border-b-white/25! border-r-white/25! shadow-[0_4px_0_0]!
+    rounded-none! overflow-hidden! transition-all! duration-150! ease-in-out! bg-primary/85!;
+}
+
+.w-md-editor-toolbar {
+  @apply bg-gray/90! border-b-white/20!;
+  border-bottom-style: solid !important;
+  border-bottom-color: color-mix(
+    in srgb,
+    var(--color-white) 20%,
+    transparent
+  ) !important;
+  border-radius: 0 !important;
+  border-bottom-width: 2px !important;
+}
+
+.w-md-editor-toolbar li + li.w-md-editor-toolbar-divider {
+  @apply bg-white/20!;
+}
+
+.w-md-editor-toolbar li > button {
+  @apply text-white/90! bg-lime/85! my-0.5! mb-1! py-0! px-1! border-2! shadow-[0_2px_0_0]! rounded-none!
+    border-l-white/35! border-t-white/35! border-b-white/25! border-r-white/25! shadow-lime!;
+}
+
+.w-md-editor-toolbar li > button:active {
+  @apply shadow-[0_0px_0_0]! translate-y-0.5!;
+}
+
+.w-md-editor-input,
+.w-md-editor-preview,
+.w-md-editor-text,
+.w-md-editor-text-pre,
+.w-md-editor-text-input,
+.wmde-markdown,
+.w-md-editor-content {
+  @apply bg-transparent! text-white h-full;
+}
+
+.w-md-editor-text textarea {
+  @apply shadow-none! translate-y-0!;
+}
+
+.wmde-markdown-var {
+  @apply bg-gray/90! text-white h-full;
+}
+
+.w-md-editor-text-input,
+.w-md-editor-text-pre,
+.w-md-editor-preview {
+  @apply font-mc!;
+}
+
+.w-md-editor-text-input::placeholder {
+  @apply text-white/75!;
+}
+
+.w-md-editor:focus-within {
+  @apply shadow-[0_2px_0_0]! translate-y-0.5!;
+}
+
+.wmde-markdown blockquote {
+  border-left: 4px solid color-mix(in srgb, var(--color-lime) 60%, transparent);
+}
+
+.wmde-markdown a {
+  color: var(--color-lime);
+}
+
+.wmde-markdown code,
+.wmde-markdown pre {
+  background: color-mix(
+    in srgb,
+    var(--color-white) 10%,
+    transparent
+  ) !important;
+  color: var(--color-white) !important;
+  @apply font-mc!;
 }
 
 .preview-swiper {

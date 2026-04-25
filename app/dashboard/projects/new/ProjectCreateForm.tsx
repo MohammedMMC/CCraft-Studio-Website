@@ -103,7 +103,7 @@ export default function ProjectCreateForm() {
                         {descriptionCount}/{PROJECT_LIMITS.description.max}
                     </span>
                 </div>
-                <div data-color-mode="light">
+                <div data-color-mode="dark">
                     <MDEditor
                         value={description}
                         onChange={(value) => setDescription(value ?? "")}

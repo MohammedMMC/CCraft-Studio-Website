@@ -47,22 +47,8 @@ export default async function DashboardPage() {
     })()
     : [];
 
-  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ");
-
   return (
     <ScreenLayout>
-      <section className="mb-4 rounded-2xl border border-neutral-200 bg-white p-6">
-        <h2 className="text-lg font-semibold">Account Snapshot</h2>
-        <p className="mt-2 text-sm text-neutral-600">
-          Signed in as <b>{fullName || "Unnamed User"}</b> ({user?.email || "No email"})
-        </p>
-        <p className="mt-1 text-xs text-neutral-500">
-          Role: {user?.role || "USER"}
-          {" | "}
-          Joined: {user ? user.createdAt.toLocaleDateString() : "N/A"}
-        </p>
-      </section>
-
       {/* Projects Section */}
       <section>
         <div className="mb-4 flex items-center justify-between gap-3">

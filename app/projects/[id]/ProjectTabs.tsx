@@ -5,8 +5,9 @@ import ProjectDescriptionMarkdown from "../../../components/ProjectDescriptionMa
 import Button from "@/components/Button";
 import ImagePreviewButton from "@/app/projects/[id]/ImagePreviewButton";
 import Image from "next/image";
-import { requestProjectReview } from "./actions";
+import { deleteProject, requestProjectReview } from "./actions";
 import { usePathname } from "next/navigation";
+import Modal from "@/components/Modal";
 
 type TabKey = "description" | "images" | "settings";
 
@@ -58,6 +59,7 @@ export default function ProjectTabs({
     const pathname = usePathname();
     const [activeTab, setActiveTab] = useState<TabKey>("description");
     const [isRequestReviewPending, startRequestReviewTransition] = useTransition();
+    const [isDeleteProjectModalOpen, setDeleteProjectModalOpen] = useState(false);
 
     useEffect(() => {
         const syncActiveTab = () => setActiveTab(resolveTabFromHash(window.location.hash, showSettings));
@@ -145,8 +147,12 @@ export default function ProjectTabs({
                             Request Review
                         </Button>)}
                     <div className="w-full flex sm:flex-row flex-col gap-3">
-                        <Button className="w-full justify-center gap-4!" colors="bg-red-400/85 text-shadow-red-500 shadow-red-500">
-                            <Image className="select-none pointer-events-none drop-shadow-[0_2px_0] drop-shadow-red-500" src="/icons/trash.svg" alt="Delete Icon" width={24} height={24} />
+                        <Button
+                            onClick={() => setDeleteProjectModalOpen(true)}
+                            className="w-full justify-center gap-4!"
+                            colors="bg-red-400/85 text-shadow-red-400 shadow-red-400"
+                        >
+                            <Image className="select-none pointer-events-none drop-shadow-[0_2px_0] drop-shadow-red-400" src="/icons/trash.svg" alt="Delete Icon" width={24} height={24} />
                             Delete Project
                         </Button>
                         <Button className="w-full justify-center gap-4!" colors="bg-blue-400/85 text-shadow-blue-400 shadow-blue-400">
@@ -157,6 +163,36 @@ export default function ProjectTabs({
                 </section>
             )
             }
-        </div >
+
+
+
+            <Modal
+                open={isDeleteProjectModalOpen}
+                close={() => setDeleteProjectModalOpen(false)}
+                title="Delete Project"
+                description="Are you sure you want to delete this project?"
+            >
+                <div className="w-full flex sm:flex-row flex-col gap-3 mt-4">
+                    <Button
+
+                        onClick={() => {
+                            setDeleteProjectModalOpen(false);
+                            deleteProject(projectId);
+                        }}
+                        className="w-full justify-center gap-4!"
+                        colors="bg-red-400/95 text-shadow-red-400 shadow-red-400"
+                    >
+                        <Image className="select-none pointer-events-none drop-shadow-[0_2px_0] drop-shadow-red-400" src="/icons/trash.svg" alt="Delete Icon" width={24} height={24} />
+                        Confirm Delete
+                    </Button>
+                    <Button
+                        onClick={() => setDeleteProjectModalOpen(false)}
+                        className="w-full justify-center" colors="bg-gray/85 text-shadow-gray shadow-gray"
+                    >
+                        Cancel
+                    </Button>
+                </div>
+            </Modal>
+        </div>
     );
 }

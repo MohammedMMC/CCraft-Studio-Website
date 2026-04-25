@@ -30,12 +30,6 @@ export default async function ScreenLayout({
         {children}
       </main>
 
-      <Modal
-        open={false}
-        title="Reusable Modal"
-        description="This modal component is scaffolded and ready for future interactions."
-      />
-
       {/* Footer */}
       <footer className="border-t border-neutral-200 bg-white py-8">
         <div className="mx-auto max-w-6xl px-6">

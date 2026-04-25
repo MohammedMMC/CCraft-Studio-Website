@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function requestProjectReview(projectId: string, pagePath: string) {
     await prisma.project.update({
@@ -47,4 +48,12 @@ export async function addProjectDownload(projectId: string, pagePath: string) {
     });
 
     revalidatePath(pagePath);
+}
+
+export async function deleteProject(projectId: string) {
+    await prisma.project.delete({
+        where: { id: projectId },
+    });
+
+    redirect("/dashboard");
 }

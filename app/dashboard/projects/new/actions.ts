@@ -111,7 +111,7 @@ export async function createProjectAction(
 
         const projectFileUpload = await uploadToBlob(
             payload.projectFile,
-            `${folder}/files/${sanitizeFilename(payload.projectFile.name)}`,
+            `${folder}/files/${sanitizeFilename(payload.name + "-" + payload.version + ".ccproj")}`,
             token,
         );
 

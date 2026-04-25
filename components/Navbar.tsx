@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
+import Button from "./Button";
 
 const navLinks = [
   { href: "/community", label: "Community" },
@@ -37,13 +38,6 @@ export default function Navbar({ isAdmin = false }: NavbarProps) {
     [isAdmin, isSignedIn],
   );
 
-  const getLinkClass = (href: string, stacked = false) =>
-    `rounded-md px-3 py-2 font-medium transition-colors ${stacked ? "block w-full" : ""} ${
-      pathname === href
-        ? "bg-neutral-900 text-white"
-        : "text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900"
-    }`;
-
   return (
     <header className="border-b border-neutral-200 bg-white">
       <nav className="mx-auto w-full max-w-6xl px-6 py-4">
@@ -52,37 +46,50 @@ export default function Navbar({ isAdmin = false }: NavbarProps) {
             CCraft Studio
           </Link>
 
-          <button
-            className="cursor-pointer inline-flex h-10 w-10 items-center justify-center rounded-sm border-2 border-current/20 transition-colors md:hidden"
+          <Button
+            className="cursor-pointer inline-flex h-10 w-10 items-center justify-center border-2 border-current/20 transition-colors md:hidden"
             aria-expanded={isMenuOpen}
             aria-controls="mobile-nav-menu"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             onClick={() => setIsMenuOpen((prev) => !prev)}
           >
             <span
-              className={`absolute h-0.5 w-5 rounded bg-current transition-transform duration-200 ${
-                isMenuOpen ? "translate-y-0 rotate-45" : "-translate-y-1.5"
-              }`}
+              className={`absolute h-0.5 w-5 bg-current transition-transform duration-200 ${isMenuOpen ? "translate-y-0 rotate-45" : "-translate-y-1.5"
+                }`}
             />
             <span
-              className={`absolute h-0.5 w-5 rounded bg-current transition-opacity duration-200 ${
-                isMenuOpen ? "opacity-0" : "opacity-100"
-              }`}
+              className={`absolute h-0.5 w-5 bg-current transition-opacity duration-200 ${isMenuOpen ? "opacity-0" : "opacity-100"
+                }`}
             />
             <span
-              className={`absolute h-0.5 w-5 rounded bg-current transition-transform duration-200 ${
-                isMenuOpen ? "translate-y-0 -rotate-45" : "translate-y-1.5"
-              }`}
+              className={`absolute h-0.5 w-5 bg-current transition-transform duration-200 ${isMenuOpen ? "translate-y-0 -rotate-45" : "translate-y-1.5"
+                }`}
             />
-          </button>
+          </Button>
 
           <div className="hidden items-center gap-2 md:flex">
-            <ul className="flex items-center gap-2 text-sm">
+            <ul className="flex items-center gap-2">
               {visibleLinks.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className={getLinkClass(item.href)}>
+                  <Button
+                    href={item.href}
+                    className="px-2.5! py-1.5! mb-1! text-sm"
+                    colors={
+                      pathname === item.href
+                        ? undefined
+                        : (
+                          item.label === "Admin"
+                            ? "bg-purple-400/85 text-shadow-purple-400 shadow-purple-400"
+                            : (
+                              item.label === "Dashboard"
+                                ? "bg-blue-400/85 text-shadow-blue-400 shadow-blue-400"
+                                : "bg-gray/85 shadow-gray text-shadow-gray"
+                            )
+                        )
+                    }
+                  >
                     {item.label}
-                  </Link>
+                  </Button>
                 </li>
               ))}
             </ul>
@@ -90,25 +97,35 @@ export default function Navbar({ isAdmin = false }: NavbarProps) {
             {!isSignedIn ? (
               <div className="flex items-center gap-2 text-sm">
                 <SignInButton mode="redirect" forceRedirectUrl="/dashboard">
-                  <button
-                    className="cursor-pointer rounded-md border border-neutral-300 px-3 py-2 font-medium text-neutral-800 hover:bg-neutral-100"
+                  <Button
+                    className="px-2.5! py-1.5! mb-1! text-sm"
+                    colors={pathname === "/auth/sign-in" ? undefined : "bg-gray/85 shadow-gray text-shadow-gray"}
                     type="button"
                   >
                     Sign in
-                  </button>
+                  </Button>
                 </SignInButton>
                 <SignUpButton mode="redirect" forceRedirectUrl="/dashboard">
-                  <button
-                    className="cursor-pointer rounded-md bg-lime px-3 py-2 font-medium text-white hover:bg-lime/85"
+                  <Button
+                    className="px-2.5! py-1.5! mb-1! text-sm"
+                    colors={pathname === "/auth/sign-up" ? undefined : "bg-gray/85 shadow-gray text-shadow-gray"}
                     type="button"
                   >
                     Register
-                  </button>
+                  </Button>
                 </SignUpButton>
               </div>
             ) : (
-              <div className="ml-1">
-                <UserButton />
+              <div className="h-10 w-10">
+                <UserButton
+                  appearance={{
+                    elements: {
+                      userButtonTrigger: "w-full! h-full! rounded-xs!",
+                      userButtonAvatarBox: "w-full! h-full! rounded-xs!",
+                      userButtonPopoverCard: "rounded-xs!",
+                    },
+                  }}
+                />
               </div>
             )}
           </div>
@@ -116,56 +133,79 @@ export default function Navbar({ isAdmin = false }: NavbarProps) {
 
         <div
           id="mobile-nav-menu"
-          className={`overflow-hidden transition-[max-height,opacity,margin] duration-300 ease-out md:hidden ${
-            isMenuOpen ? "mt-3 max-h-112 opacity-100" : "max-h-0 opacity-0"
-          }`}
+          className={`overflow-hidden transition-[max-height,opacity,margin] duration-300 ease-out md:hidden ${isMenuOpen ? "mt-3 max-h-112 opacity-100" : "max-h-0 opacity-0"
+            }`}
         >
-          <div className="rounded-2xl border border-neutral-200 bg-white/95 p-3 shadow-lg shadow-neutral-900/5 backdrop-blur">
-            <ul className="flex flex-col gap-1 text-sm">
+          <div className="cardcb p-3! py-4!">
+            <ul className="flex flex-col gap-3">
               {visibleLinks.map((item) => (
                 <li key={item.href}>
-                  <Link
+                  <Button
                     href={item.href}
-                    className={getLinkClass(item.href, true)}
-                    onClick={() => setIsMenuOpen(false)}
+                    className="px-2.5! py-1.5! mb-1! text-sm w-full text-center"
+                    colors={
+                      pathname === item.href
+                        ? undefined
+                        : (
+                          item.label === "Admin"
+                            ? "bg-purple-400/85 text-shadow-purple-400 shadow-purple-400"
+                            : (
+                              item.label === "Dashboard"
+                                ? "bg-blue-400/85 text-shadow-blue-400 shadow-blue-400"
+                                : "bg-gray/85 shadow-gray text-shadow-gray"
+                            )
+                        )
+                    }
                   >
                     {item.label}
-                  </Link>
+                  </Button>
                 </li>
               ))}
             </ul>
 
-            <div className="my-3 h-px bg-neutral-200" />
+            <div className="h-0.5 bg-white/20 my-3"></div>
 
             {!isSignedIn ? (
-              <div className="grid grid-cols-1 gap-2">
+              <div className="flex flex-row gap-2">
                 <SignInButton mode="redirect" forceRedirectUrl="/dashboard">
-                  <button
-                    className="w-full cursor-pointer rounded-md border border-neutral-300 px-3 py-2 font-medium text-neutral-800 hover:bg-neutral-100"
+                  <Button
+                    className="w-full px-2.5! py-1.5! text-sm"
+                    colors={pathname === "/auth/sign-in" ? undefined : "bg-gray/85 shadow-gray text-shadow-gray"}
                     type="button"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Sign in
-                  </button>
+                  </Button>
                 </SignInButton>
                 <SignUpButton mode="redirect" forceRedirectUrl="/dashboard">
-                  <button
-                    className="w-full cursor-pointer rounded-md bg-lime px-3 py-2 font-medium text-white hover:bg-lime/85"
+                  <Button
+                    className="w-full px-2.5! py-1.5! text-sm"
+                    colors={pathname === "/auth/sign-up" ? undefined : "bg-gray/85 shadow-gray text-shadow-gray"}
                     type="button"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Register
-                  </button>
+                  </Button>
                 </SignUpButton>
               </div>
             ) : (
               <div className="flex items-center justify-end">
-                <UserButton />
+                <div className="h-10 w-10">
+                  <UserButton
+                    appearance={{
+                      elements: {
+                        userButtonTrigger: "w-full! h-full! rounded-xs!",
+                        userButtonAvatarBox: "w-full! h-full! rounded-xs!",
+                        userButtonPopoverCard: "rounded-xs!",
+                      },
+                    }}
+                  />
+                </div>
               </div>
             )}
           </div>
         </div>
       </nav>
-    </header>
+    </header >
   );
 }

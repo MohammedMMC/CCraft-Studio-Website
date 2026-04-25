@@ -85,7 +85,7 @@ export default async function DashboardAdminPage() {
         <h2 className="text-lg font-semibold">Pending Project Reviews</h2>
 
         {pendingProjects.length === 0 ? (
-          <div className="mt-4 rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-sm text-neutral-600">
+          <div className="mt-4 cardcb p-4 text-sm text-white/90">
             Couldn&apos;t find any unreviewed projects.
           </div>
         ) : (
@@ -102,7 +102,7 @@ export default async function DashboardAdminPage() {
         <h2 className="text-lg font-semibold">Latest Project Reviews</h2>
 
         {latestReviewedProjects.length === 0 ? (
-          <div className="mt-4 rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-sm text-neutral-600">
+          <div className="mt-4 cardcb p-4 text-sm text-white/90">
             Couldn&apos;t find any reviewed projects.
           </div>
         ) : (

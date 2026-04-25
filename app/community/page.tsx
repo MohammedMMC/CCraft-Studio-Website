@@ -1,10 +1,10 @@
 import ProjectCard from "@/components/ProjectCard";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import Link from "next/link";
 import { isMissingProjectTablesError } from "@/lib/projects/db-guards";
 import ScreenLayout from "../../components/ScreenLayout";
 import TagSelectDropdown from "@/components/TagSelectDropdown";
+import Button from "@/components/Button";
 
 type CommunitySearchParams = {
   sortBy?: string | string[];
@@ -160,17 +160,17 @@ export default async function CommunityPage({
 
             <input type="hidden" name="limit" value={String(PAGE_SIZE)} />
 
-            <button
+            <Button
               type="submit"
-              className="cursor-pointer rounded-sm bg-lime px-3 py-2 text-sm font-semibold text-white hover:bg-lime/85"
+              className="cursor-pointer rounded-sm bg-lime px-3! py-2! text-sm font-semibold text-white hover:bg-lime/85"
             >
               Search
-            </button>
+            </Button>
           </form>
         </div>
 
         {visibleProjects.length === 0 ? (
-          <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-sm text-neutral-600">
+          <div className="cardcb p-4 text-sm text-white/90">
             No projects uploaded yet.
           </div>
         ) : (
@@ -183,12 +183,12 @@ export default async function CommunityPage({
 
             {hasMore ? (
               <div className="mt-6 flex justify-center">
-                <Link
+                <Button
                   href={`/community?${nextQuery}`}
-                  className="rounded-sm bg-lime px-4 py-2 text-sm font-semibold text-white hover:bg-lime/85"
+                  className="text-xs px-3! py-2! justify-center"
                 >
                   Show More
-                </Link>
+                </Button>
               </div>
             ) : null}
           </>

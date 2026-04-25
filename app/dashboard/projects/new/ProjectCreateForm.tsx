@@ -7,6 +7,7 @@ import {
 } from "./actions";
 import { CreateProjectFieldErrors, formatBytes, PROJECT_LIMITS } from "@/lib/projects/validation";
 import MDEditor from "@uiw/react-md-editor";
+import Button from "@/components/Button";
 
 const createProjectInitialState = {
     status: "idle" as const,
@@ -207,13 +208,13 @@ export default function ProjectCreateForm() {
             )}
 
             <div>
-                <button
+                <Button
                     type="submit"
                     disabled={pending}
-                    className="cursor-pointer rounded-lg bg-lime px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-lime/85 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="cursor-pointer text-sm"
                 >
                     {pending ? "Uploading..." : "Create Project"}
-                </button>
+                </Button>
             </div>
         </form>
     );

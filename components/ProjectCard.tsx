@@ -3,6 +3,7 @@ import { formatBytes, formatDate, PROJECT_LIMITS } from "@/lib/projects/validati
 import { Project, ProjectComment, ProjectImage, ReviewData, User } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
+import Button from "./Button";
 
 type ProjectCardProps = {
     project: Project & {
@@ -56,13 +57,13 @@ export default function ProjectCard({ project, view = "user" }: ProjectCardProps
                     <p className="text-sm text-white/80 line-clamp-3">{project.shortDescription}</p>
                 </div>
                 {(view === "owner" || view === "user") && (
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-3">
                         {view === "owner" && (
                             <>
                                 <p className="text-xs text-white/70">
                                     Version {project.version} | Published {project.publishDate.toLocaleDateString()}
                                 </p>
-                                <p className={`
+                                {/* <p className={`
                                     rounded-sm border px-2 py-1 text-xs
                                     ${!project.reviewed
                                         ? "border-amber-200/50 bg-amber-200/10 text-amber-300/90"
@@ -71,13 +72,13 @@ export default function ProjectCard({ project, view = "user" }: ProjectCardProps
                                             : "border-lime/50 bg-lime/10 text-lime"}
                                 `}>
                                     Status: {!project.reviewed ? "In Review" : (latestReview?.rejected ? "Rejected" : "Approved")}
-                                </p>
+                                </p> */}
                             </>
                         )}
-                        <Link
+                        <Button
                             href={`/projects/${project.id}`}
-                            className="text-center cursor-pointer rounded-md bg-lime px-4 py-2 text-sm font-semibold text-white hover:bg-lime/85"
-                        >View Project</Link>
+                            className="text-xs px-3! py-2! justify-center"
+                        >View Project</Button>
                     </div>
                 )}
                 {view === "admin" && (
@@ -117,10 +118,10 @@ export default function ProjectCard({ project, view = "user" }: ProjectCardProps
                             </div>
                         </dl>
 
-                        <Link
+                        <Button
                             href={`/projects/${project.id}`}
-                            className="inline-flex w-full justify-center rounded-md bg-lime px-4 py-2 text-sm font-semibold text-white hover:bg-lime/85"
-                        >Open Project Page</Link>
+                            className="w-full text-xs px-3! py-2! justify-center"
+                        >Open Project Page</Button>
 
                         <form action={reviewProjectAction} className="space-y-2">
                             <input type="hidden" name="projectId" value={project.id} />
@@ -134,18 +135,20 @@ export default function ProjectCard({ project, view = "user" }: ProjectCardProps
                                 placeholder="Write why this project was approved or rejected."
                             />
                             <div className="flex flex-row justify-between gap-2">
-                                <button
+                                <Button
                                     type="submit"
                                     name="rejected"
                                     value="false"
-                                    className="w-full cursor-pointer rounded-md bg-lime px-4 py-2 text-sm font-semibold text-white hover:bg-lime/85"
-                                >Approve</button>
-                                <button
+                                    colors="bg-lime/95 text-shadow-lime shadow-lime"
+                                    className="w-full text-xs px-3! py-2! justify-center"
+                                >Approve</Button>
+                                <Button
                                     type="submit"
                                     name="rejected"
                                     value="true"
-                                    className="w-full cursor-pointer rounded-md bg-rose-700 px-4 py-2 text-sm font-semibold text-white hover:bg-rose-800"
-                                >Reject</button>
+                                    colors="bg-red-400/95 text-shadow-red-400 shadow-red-400"
+                                    className="w-full text-xs px-3! py-2! justify-center"
+                                >Reject</Button>
                             </div>
                         </form>
                     </>

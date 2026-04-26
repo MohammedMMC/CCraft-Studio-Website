@@ -1,0 +1,76 @@
+import type { MetadataRoute } from "next";
+import { prisma } from "@/lib/prisma";
+import { isMissingProjectTablesError } from "@/lib/projects/db-guards";
+
+function getSiteUrl() {
+  const raw =
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    process.env.NEXT_PUBLIC_APP_URL ??
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
+  return raw.endsWith("/") ? raw.slice(0, -1) : raw;
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const siteUrl = getSiteUrl();
+
+  const staticRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${siteUrl}/`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 1,
+    },
+    {
+      url: `${siteUrl}/community`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/pp`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
+    {
+      url: `${siteUrl}/tos`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
+  ];
+
+  const projectRoutes = await (async () => {
+    try {
+      const projects = await prisma.project.findMany({
+        where: {
+          reviewed: true,
+        },
+        select: {
+          id: true,
+          projectUpdatedAt: true,
+          updatedAt: true,
+        },
+        orderBy: {
+          projectUpdatedAt: "desc",
+        },
+      });
+
+      return projects.map((project) => ({
+        url: `${siteUrl}/projects/${project.id}`,
+        lastModified: project.projectUpdatedAt ?? project.updatedAt,
+        changeFrequency: "weekly" as const,
+        priority: 0.8,
+      }));
+    } catch (error) {
+      if (!isMissingProjectTablesError(error)) {
+        throw error;
+      }
+
+      return [];
+    }
+  })();
+
+  return [...staticRoutes, ...projectRoutes];
+}

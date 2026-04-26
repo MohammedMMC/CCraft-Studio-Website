@@ -47,28 +47,28 @@ export default function ProjectCreateForm() {
 
             <div className="grid gap-6 md:grid-cols-2">
                 <label className="block">
-                    <span className="text-sm font-medium text-neutral-800">Project Name</span>
+                    <span className="text-sm font-medium">Project Name</span>
                     <input
                         name="name"
                         type="text"
                         required
                         minLength={PROJECT_LIMITS.name.min}
                         maxLength={PROJECT_LIMITS.name.max}
-                        className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-gray/10 focus:outline-none"
+                        className="mt-2 w-full px-3 py-2 text-sm focus:bg-gray/10 focus:outline-none"
                         placeholder="My Automation Toolkit"
                     />
                     <FieldError errors={fieldErrors} name="name" />
                 </label>
 
                 <label className="block">
-                    <span className="text-sm font-medium text-neutral-800">Version</span>
+                    <span className="text-sm font-medium">Version</span>
                     <input
                         name="version"
                         type="text"
                         required
                         minLength={PROJECT_LIMITS.version.min}
                         maxLength={PROJECT_LIMITS.version.max}
-                        className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-gray/10 focus:outline-none"
+                        className="mt-2 w-full px-3 py-2 text-sm focus:bg-gray/10 focus:outline-none"
                         placeholder="1.0.0"
                         pattern="[A-Za-z0-9._-]+"
                     />
@@ -77,7 +77,7 @@ export default function ProjectCreateForm() {
             </div>
 
             <label className="block">
-                <span className="text-sm font-medium text-neutral-800">
+                <span className="text-sm font-medium">
                     Project Short Description
                 </span>
                 <textarea
@@ -85,7 +85,7 @@ export default function ProjectCreateForm() {
                     required
                     minLength={PROJECT_LIMITS.shortDescription.min}
                     maxLength={PROJECT_LIMITS.shortDescription.max}
-                    className="mt-2 min-h-26 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-gray/10 focus:outline-none"
+                    className="mt-2 min-h-26 w-full px-3 py-2 text-sm focus:bg-gray/10 focus:outline-none"
                     placeholder="What does this project do in one clear paragraph?"
                 />
                 <FieldError errors={fieldErrors} name="shortDescription" />
@@ -93,7 +93,7 @@ export default function ProjectCreateForm() {
 
             <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-neutral-800">
+                    <span className="text-sm font-medium">
                         Project Description (Markdown)
                     </span>
                     <span
@@ -122,12 +122,12 @@ export default function ProjectCreateForm() {
             </div>
 
             <label className="block">
-                <span className="text-sm font-medium text-neutral-800">Tags (comma separated)</span>
+                <span className="text-sm font-medium">Tags (comma separated)</span>
                 <input
                     name="tags"
                     type="text"
                     required
-                    className="mt-2 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:bg-gray/10 focus:outline-none"
+                    className="mt-2 w-full px-3 py-2 text-sm focus:bg-gray/10 focus:outline-none"
                     placeholder="automation, cc-tweaked, logistics"
                     maxLength={220}
                 />
@@ -135,26 +135,26 @@ export default function ProjectCreateForm() {
             </label>
 
             <label className="block">
-                <span className="text-sm font-medium text-neutral-800">Project File (.ccproj)</span>
+                <span className="text-sm font-medium">Project File (.ccproj)</span>
                 <input
                     name="projectFile"
                     type="file"
                     required
                     accept=".ccproj"
-                    className="mt-2 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+                    className="mt-2 block w-full px-3 py-2 text-sm"
                 />
                 <FieldError errors={fieldErrors} name="projectFile" />
             </label>
 
             <label className="block">
-                <span className="text-sm font-medium text-neutral-800">Project Images</span>
+                <span className="text-sm font-medium">Project Images</span>
                 <input
                     name="images"
                     type="file"
                     accept="image/png,image/jpeg,image/webp,image/gif"
                     multiple
                     required
-                    className="mt-2 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+                    className="mt-2 block w-full px-3 py-2 text-sm"
                     onChange={(event) => {
                         const files = Array.from(event.currentTarget.files ?? []);
                         setSelectedImages(files);
@@ -166,21 +166,21 @@ export default function ProjectCreateForm() {
 
 
             {(selectedImages.length > 0) && (
-                <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
-                    <h3 className="text-sm font-semibold text-neutral-800">
+                <div className="cardcb p-4">
+                    <h3 className="text-sm font-semibold text-white">
                         Select Main Image For Card Preview
                     </h3>
                     <ul className="mt-3 space-y-2">
                         {selectedImages.map((file, index) => (
                             <li
                                 key={`${file.name}-${file.size}-${index}`}
-                                className="flex items-center justify-between gap-3 rounded-lg border border-neutral-200 bg-white px-3 py-2"
+                                className="flex items-center justify-between gap-3 cardcb px-3 py-2"
                             >
                                 <div>
-                                    <p className="text-sm font-medium text-neutral-800">{file.name}</p>
-                                    <p className="text-xs text-neutral-500">{formatBytes(file.size)}</p>
+                                    <p className="text-sm font-medium text-white/90">{file.name}</p>
+                                    <p className="text-xs text-white/70">{formatBytes(file.size)}</p>
                                 </div>
-                                <label className="inline-flex items-center gap-2 text-xs text-neutral-700">
+                                <label className="inline-flex items-center gap-2 text-xs text-white/90">
                                     <input
                                         type="radio"
                                         name="main-image"
@@ -213,7 +213,7 @@ export default function ProjectCreateForm() {
                     disabled={pending}
                     className="cursor-pointer text-sm"
                 >
-                    {pending ? "Uploading..." : "Create Project"}
+                    {pending ? "Creating..." : "Create Project"}
                 </Button>
             </div>
         </form>

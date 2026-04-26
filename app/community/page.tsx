@@ -121,12 +121,12 @@ export default async function CommunityPage({
           </div>
 
           <form method="get" action="/community" className="flex flex-wrap items-end gap-2">
-            <label className="flex flex-col gap-1 text-xs font-semibold text-neutral-700">
+            <label className="flex flex-col gap-1 text-xs font-semibold">
               Sort by
               <select
                 name="sortBy"
                 defaultValue={sortBy}
-                className="cursor-pointer hover:border-neutral-400 rounded-sm border border-neutral-300 bg-white px-2 py-1.5 text-sm text-neutral-800"
+                className="px-2 py-1.5 text-sm"
               >
                 <option value="date">Date</option>
                 <option value="likes">Likes</option>
@@ -134,12 +134,12 @@ export default async function CommunityPage({
               </select>
             </label>
 
-            <label className="flex flex-col gap-1 text-xs font-semibold text-neutral-700">
+            <label className="flex flex-col gap-1 text-xs font-semibold">
               Order
               <select
                 name="sortOrder"
                 defaultValue={sortOrder}
-                className="cursor-pointer hover:border-neutral-400 rounded-sm border border-neutral-300 bg-white px-2 py-1.5 text-sm text-neutral-800"
+                className="px-2 py-1.5 text-sm"
               >
                 <option value="desc">Descending</option>
                 <option value="asc">Ascending</option>
@@ -148,12 +148,12 @@ export default async function CommunityPage({
 
             <TagSelectDropdown tags={tags} initialSelectedTags={selectedTags} />
 
-            <label className="flex flex-col gap-1 text-xs font-semibold text-neutral-700">
+            <label className="w-full max-w-2xs flex flex-col gap-1 text-xs font-semibold">
               Search
               <input
                 name="q"
                 defaultValue={query}
-                className="hover:border-neutral-400 rounded-sm border border-neutral-300 bg-white px-2 py-1.5 text-sm text-neutral-800"
+                className="h-11 px-2 py-1.5 text-sm"
                 placeholder="Name or short description"
               />
             </label>
@@ -162,7 +162,7 @@ export default async function CommunityPage({
 
             <Button
               type="submit"
-              className="cursor-pointer rounded-sm bg-lime px-3! py-2! text-sm font-semibold text-white hover:bg-lime/85"
+              className="cursor-pointer bg-lime px-3! py-2! text-sm font-semibold text-white hover:bg-lime/85"
             >
               Search
             </Button>

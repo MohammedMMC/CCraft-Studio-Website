@@ -74,39 +74,6 @@ input[type="file"]::file-selector-button {
     filter 120ms ease;
 }
 
-input[type="checkbox"] {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid var(--primary);
-  border-radius: 0;
-  background-color: var(--color-white);
-  display: inline-grid;
-  place-content: center;
-  cursor: pointer;
-}
-
-input[type="checkbox"]::before {
-  content: "";
-  width: 0.25rem;
-  height: 0.5rem;
-  border: solid var(--color-lime);
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg) scale(0);
-  transform-origin: bottom left;
-  transition: transform 0.12s ease-in-out;
-}
-
-input[type="checkbox"]:checked::before {
-  transform: rotate(45deg) scale(1);
-}
-
-input[type="checkbox"]:focus-visible {
-  outline: 2px solid var(--color-lime);
-  outline-offset: 2px;
-}
-
 :where(.w-md-editor, .wmde-markdown, .wmde-markdown-var) {
   @apply font-mc!;
   --md-editor-background-color: color-mix(
@@ -238,20 +205,22 @@ input[type="checkbox"]:focus-visible {
   background-color: var(--color-lime);
 }
 
-input[type="radio"] {
+input[type="radio"],
+input[type="checkbox"] {
+  @apply bg-gray/85!;
   appearance: none;
   -webkit-appearance: none;
   width: 1rem;
   height: 1rem;
   border: 2px solid var(--primary);
   border-radius: 0;
-  background-color: var(--color-white);
   display: inline-grid;
   place-content: center;
   cursor: pointer;
 }
 
-input[type="radio"]::before {
+input[type="radio"]::before,
+input[type="checkbox"]::before {
   content: "";
   width: 0.5rem;
   height: 0.5rem;
@@ -260,11 +229,13 @@ input[type="radio"]::before {
   background-color: var(--color-lime);
 }
 
-input[type="radio"]:checked::before {
+input[type="radio"]:checked::before,
+input[type="checkbox"]:checked::before {
   transform: scale(1);
 }
 
-input[type="radio"]:focus-visible {
+input[type="radio"]:focus-visible,
+input[type="checkbox"]:focus-visible {
   outline: 2px solid var(--color-lime);
   outline-offset: 2px;
 }

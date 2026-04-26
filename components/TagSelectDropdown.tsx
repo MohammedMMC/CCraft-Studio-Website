@@ -27,25 +27,25 @@ export default function TagSelectDropdown({ tags, initialSelectedTags }: TagSele
     };
 
     return (
-        <div className="flex min-w-56 flex-col gap-1 text-xs font-semibold text-neutral-700">
-            <span>Tags</span>
+        <div className="flex min-w-56 flex-col gap-1 text-xs font-semibold text-white/90">
+            <span className="text-xs font-semibold">Tags</span>
             <details className="group relative">
-                <summary className="cursor-pointer list-none rounded-sm border border-neutral-300 bg-white px-3 py-2 text-sm font-medium text-neutral-800 transition hover:border-neutral-400">
+                <summary className="cursor-pointer list-none border-4 bg-gray/90 px-3 py-2 text-sm font-medium text-white shadow-gray border-l-white/35 border-t-white/35 border-b-white/25 border-r-white/25 shadow-[0_4px_0_0] transition-all duration-150 ease-in-out active:shadow-[0_1px_0_0] active:translate-y-0.5">
                     <div className="flex items-center justify-between gap-3">
                         <span className="truncate">{selectedTagsLabel}</span>
-                        <span className="text-xs text-neutral-500 transition group-open:rotate-180">v</span>
+                        <span className="text-xs text-white/70 transition group-open:rotate-180">v</span>
                     </div>
                 </summary>
 
-                <div className="absolute z-20 mt-1 max-h-64 w-72 overflow-auto rounded-sm border border-neutral-300 bg-white p-2">
+                <div className="absolute z-20 mt-1 max-h-64 w-72 overflow-auto border-4 bg-gray/95 p-2 text-white shadow-gray border-l-white/35 border-t-white/35 border-b-white/25 border-r-white/25 shadow-[0_4px_0_0]">
                     {tags.length === 0 ? (
-                        <p className="px-2 py-2 text-xs text-neutral-500">No tags found.</p>
+                        <p className="px-2 py-2 text-xs text-white/70">No tags found.</p>
                     ) : (
                         <div className="space-y-1">
                             {tags.map((tag) => (
                                 <label
                                     key={tag}
-                                    className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-neutral-800 hover:bg-neutral-100"
+                                    className="flex cursor-pointer items-center gap-2 px-2 py-1.5 text-sm text-white/90 transition-colors hover:bg-white/10"
                                 >
                                     <input
                                         type="checkbox"

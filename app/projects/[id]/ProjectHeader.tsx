@@ -80,7 +80,7 @@ export default function ProjectHeader({
             </div>
             <div className="ml-auto flex flex-row gap-2 h-16">
                 <Button disabled={isToggleLikePending} className="h-full"
-                    onClick={() => viewerId ? startToggleLikeTransition(() => toggleProjectLike(projectId, viewerId, pathname)) : null}
+                    onClick={() => viewerId ? startToggleLikeTransition(() => toggleProjectLike(projectId, pathname)) : null}
                     colors={isLikedByViewer ? `bg-red-500/80 shadow-red-600` : `bg-gray/80 shadow-gray`}
                 >
                     <Image className={`select-none pointer-events-none` + (isLikedByViewer ? "" : " saturate-0")} src="/icons/heart-colored.svg" alt="Heart Icon" width={32} height={32} />

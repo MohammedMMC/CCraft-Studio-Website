@@ -66,7 +66,7 @@ export default function ProjectTabs({
         syncActiveTab();
         window.addEventListener("hashchange", syncActiveTab);
         return () => window.removeEventListener("hashchange", syncActiveTab);
-    }, []);
+    }, [showSettings]);
 
     const handleTabClick = (tab: TabKey) => {
         setActiveTab(tab);
@@ -155,7 +155,11 @@ export default function ProjectTabs({
                             <Image className="select-none pointer-events-none drop-shadow-[0_2px_0] drop-shadow-red-400" src="/icons/trash.svg" alt="Delete Icon" width={24} height={24} />
                             Delete Project
                         </Button>
-                        <Button className="w-full justify-center gap-4!" colors="bg-blue-400/85 text-shadow-blue-400 shadow-blue-400">
+                        <Button
+                            href={`/dashboard/projects/${projectId}/edit`}
+                            className="w-full justify-center gap-4!"
+                            colors="bg-blue-400/85 text-shadow-blue-400 shadow-blue-400"
+                        >
                             <Image className="select-none pointer-events-none drop-shadow-[0_2px_0] drop-shadow-blue-400" src="/icons/pen.svg" alt="Edit Icon" width={24} height={24} />
                             Edit Project
                         </Button>

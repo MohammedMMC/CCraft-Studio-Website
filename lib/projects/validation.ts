@@ -67,6 +67,19 @@ export type ValidatedCreateProjectInput = {
     mainImageIndex: number;
 };
 
+export type ValidatedUpdateProjectInput = {
+    name: string;
+    shortDescription: string;
+    description: string;
+    version: string;
+    tags: string[];
+    projectUpdatedAt: Date;
+    projectFile: File | null;
+    images: File[];
+    existingImagesCount: number;
+    mainImageIndex: number;
+};
+
 function isFileEntry(value: FormDataEntryValue | null): value is File {
     return typeof File !== "undefined" && value instanceof File;
 }
@@ -256,6 +269,142 @@ export function validateCreateProjectForm(
             projectFile,
             images,
             mainImageIndex,
+        },
+    };
+}
+
+function normalizeOptionalImages(
+    values: FormDataEntryValue[],
+    errors: CreateProjectFieldErrors,
+): File[] {
+    const files = values.filter(isFileEntry).filter((file) => file.size > 0);
+
+    if (files.length === 0) {
+        return [];
+    }
+
+    if (files.length > PROJECT_LIMITS.maxImages) {
+        errors.images = `You can upload up to ${PROJECT_LIMITS.maxImages} images.`;
+        return [];
+    }
+
+    const invalidImage = files.find(
+        (file) =>
+            !ALLOWED_IMAGE_TYPES.has(file.type) ||
+            file.size > PROJECT_LIMITS.maxImageSizeBytes,
+    );
+
+    if (invalidImage) {
+        errors.images =
+            "Images must be PNG, JPG, WEBP, or GIF and each must be under 8MB.";
+        return [];
+    }
+
+    return files;
+}
+
+export function validateUpdateProjectForm(
+    formData: FormData,
+):
+    | { success: true; data: ValidatedUpdateProjectInput }
+    | { success: false; errors: CreateProjectFieldErrors } {
+    const errors: CreateProjectFieldErrors = {};
+
+    const name = sanitizePlainText(String(formData.get("name") ?? ""));
+    if (
+        name.length < PROJECT_LIMITS.name.min ||
+        name.length > PROJECT_LIMITS.name.max
+    ) {
+        errors.name = `Project name must be ${PROJECT_LIMITS.name.min}-${PROJECT_LIMITS.name.max} characters.`;
+    }
+
+    const shortDescription = sanitizePlainText(
+        String(formData.get("shortDescription") ?? ""),
+    );
+    if (
+        shortDescription.length < PROJECT_LIMITS.shortDescription.min ||
+        shortDescription.length > PROJECT_LIMITS.shortDescription.max
+    ) {
+        errors.shortDescription =
+            `Short description must be between ${PROJECT_LIMITS.shortDescription.min}-${PROJECT_LIMITS.shortDescription.max} characters.`;
+    }
+
+    const description = sanitizeMarkdown(String(formData.get("description") ?? ""));
+    if (
+        description.length < PROJECT_LIMITS.description.min ||
+        description.length > PROJECT_LIMITS.description.max
+    ) {
+        errors.description =
+            `Description must be between ${PROJECT_LIMITS.description.min}-${PROJECT_LIMITS.description.max} characters.`;
+    }
+
+    const version = sanitizePlainText(String(formData.get("version") ?? ""));
+    if (
+        version.length < PROJECT_LIMITS.version.min ||
+        version.length > PROJECT_LIMITS.version.max ||
+        !VERSION_PATTERN.test(version)
+    ) {
+        errors.version =
+            "Version must use letters, numbers, dots, underscores, or dashes.";
+    }
+
+    const tags = toTags(formData.get("tags"), errors);
+    const projectUpdatedAt = new Date();
+
+    const projectFileEntry = formData.get("projectFile");
+    const projectFile = isFileEntry(projectFileEntry) && projectFileEntry.size > 0
+        ? projectFileEntry
+        : null;
+
+    if (projectFile) {
+        if (!projectFile.name.toLowerCase().endsWith(".ccproj")) {
+            errors.projectFile = "Only .ccproj files are allowed.";
+        }
+
+        if (projectFile.size > PROJECT_LIMITS.maxProjectFileSizeBytes) {
+            errors.projectFile =
+                "Project file exceeds 40MB. Please upload a smaller file.";
+        }
+    }
+
+    const images = normalizeOptionalImages(formData.getAll("images"), errors);
+
+    const rawExistingImagesCount = String(formData.get("existingImagesCount") ?? "0").trim();
+    const existingImagesCount = Number.parseInt(rawExistingImagesCount, 10);
+    const safeExistingImagesCount = Number.isInteger(existingImagesCount) && existingImagesCount >= 0
+        ? existingImagesCount
+        : 0;
+
+    const rawMainImageIndex = String(formData.get("mainImageIndex") ?? "0").trim();
+    const mainImageIndex = Number.parseInt(rawMainImageIndex, 10);
+
+    const imageCountForValidation = images.length > 0 ? images.length : safeExistingImagesCount;
+    if (
+        imageCountForValidation > 0 &&
+        (!Number.isInteger(mainImageIndex) ||
+            mainImageIndex < 0 ||
+            mainImageIndex >= imageCountForValidation)
+    ) {
+        errors.mainImageIndex = "Select a valid main image.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+        return { success: false, errors };
+    }
+
+    return {
+        success: true,
+        data: {
+            name,
+            shortDescription,
+            description,
+            version,
+            tags,
+            projectUpdatedAt,
+            projectFile,
+            images,
+            existingImagesCount: safeExistingImagesCount,
+            mainImageIndex: Number.isInteger(mainImageIndex) && mainImageIndex >= 0 ? mainImageIndex : 0,
         },
     };
 }

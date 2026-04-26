@@ -8,15 +8,7 @@ import { formatDate } from "../../../lib/projects/validation";
 import ProjectTabs from "./ProjectTabs";
 import ProjectSide from "./ProjectSide";
 import ProjectHeader from "./ProjectHeader";
-
-function getSiteUrl() {
-    const raw =
-        process.env.NEXT_PUBLIC_SITE_URL ??
-        process.env.NEXT_PUBLIC_APP_URL ??
-        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
-
-    return raw.endsWith("/") ? raw.slice(0, -1) : raw;
-}
+import { getSiteUrl } from "@/lib/site-url";
 
 async function getProjectMetadata(id: string) {
     try {

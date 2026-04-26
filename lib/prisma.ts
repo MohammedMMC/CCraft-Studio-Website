@@ -7,7 +7,25 @@ if (!connectionString) {
     throw new Error("Missing DATABASE_URL environment variable.");
 }
 
-const adapter = new PrismaPg({ connectionString });
+function normalizeConnectionStringSslMode(value: string) {
+    try {
+        const parsed = new URL(value);
+        const sslMode = parsed.searchParams.get("sslmode")?.toLowerCase();
+
+        // Keep current strong verification behavior and avoid pg/libpq compatibility warning.
+        if (sslMode === "prefer" || sslMode === "require" || sslMode === "verify-ca") {
+            parsed.searchParams.set("sslmode", "verify-full");
+        }
+
+        return parsed.toString();
+    } catch {
+        return value;
+    }
+}
+
+const adapter = new PrismaPg({
+    connectionString: normalizeConnectionStringSslMode(connectionString),
+});
 
 const globalForPrisma = globalThis as unknown as {
     prisma?: PrismaClient;

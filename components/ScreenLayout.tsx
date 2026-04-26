@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import Modal from "./Modal";
+import Link from "next/link";
 import Navbar from "./Navbar";
 
 type ScreenLayoutProps = {
@@ -32,7 +32,16 @@ export default async function ScreenLayout({
 
       {/* Footer */}
       <footer className="border-t border-neutral-200 bg-white py-8">
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto max-w-6xl px-6 space-y-3">
+          <nav aria-label="Legal links" className="flex items-center justify-center gap-3 text-sm text-neutral-500">
+            <Link href="/pp" className="transition-colors hover:text-neutral-800">
+              Privacy Policy
+            </Link>
+            <span aria-hidden="true" className="text-neutral-300">|</span>
+            <Link href="/tos" className="transition-colors hover:text-neutral-800">
+              Terms of Service
+            </Link>
+          </nav>
           <p className="text-center text-sm text-neutral-500">
             &copy; {new Date().getFullYear()} CCraft Studio. All rights reserved.
           </p>

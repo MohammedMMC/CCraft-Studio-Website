@@ -60,7 +60,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       if (process.env.NODE_ENV === "development") {
         console.error("sitemap project route generation failed", error);
       }
-      // Do not fail sitemap generation for crawlers if the DB is temporarily unavailable.
       return [];
     }
   })();

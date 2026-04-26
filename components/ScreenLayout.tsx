@@ -24,7 +24,7 @@ export default async function ScreenLayout({
   const isAdmin = currentUser?.role === "ADMIN";
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Navbar isAdmin={isAdmin} />
 
       <main className="mx-auto w-full max-w-6xl px-6 py-10">
@@ -32,7 +32,7 @@ export default async function ScreenLayout({
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-neutral-200 bg-white py-10">
+      <footer className="border-t border-neutral-200 bg-white py-10 mt-auto">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid gap-8 border-b border-neutral-200 pb-6 lg:grid-cols-[1.15fr_1fr] lg:gap-12 lg:items-start">
             <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-center sm:text-left lg:items-start">

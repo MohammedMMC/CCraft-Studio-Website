@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
-import { isMissingProjectTablesError } from "@/lib/projects/db-guards";
 import { getSiteUrl } from "@/lib/site-url";
+
+export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
@@ -56,10 +57,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
       }));
     } catch (error) {
-      if (!isMissingProjectTablesError(error)) {
-        throw error;
+      if (process.env.NODE_ENV === "development") {
+        console.error("sitemap project route generation failed", error);
       }
-
+      // Do not fail sitemap generation for crawlers if the DB is temporarily unavailable.
       return [];
     }
   })();

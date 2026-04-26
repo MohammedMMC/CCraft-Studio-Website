@@ -11,12 +11,9 @@ function normalizeConnectionStringSslMode(value: string) {
     try {
         const parsed = new URL(value);
         const sslMode = parsed.searchParams.get("sslmode")?.toLowerCase();
-
-        // Keep current strong verification behavior and avoid pg/libpq compatibility warning.
         if (sslMode === "prefer" || sslMode === "require" || sslMode === "verify-ca") {
             parsed.searchParams.set("sslmode", "verify-full");
         }
-
         return parsed.toString();
     } catch {
         return value;

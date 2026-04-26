@@ -120,7 +120,7 @@ export default async function CommunityPage({
             <p className="text-sm text-neutral-600">Discover projects from the community.</p>
           </div>
 
-          <form method="get" action="/community" className="flex flex-wrap items-end gap-2">
+          <form method="get" action="/community" className="flex flex-wrap items-end gap-2 w-full">
             <label className="flex flex-col gap-1 text-xs font-semibold">
               Sort by
               <select

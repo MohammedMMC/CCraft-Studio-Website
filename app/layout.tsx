@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     apple: "/images/icon.png",
   },
   alternates: {
-    canonical: "/",
+    canonical: "./",
   },
   openGraph: {
     type: "website",

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
 import ScreenLayout from "../../../components/ScreenLayout";
@@ -7,6 +8,89 @@ import { formatDate } from "../../../lib/projects/validation";
 import ProjectTabs from "./ProjectTabs";
 import ProjectSide from "./ProjectSide";
 import ProjectHeader from "./ProjectHeader";
+
+function getSiteUrl() {
+    const raw =
+        process.env.NEXT_PUBLIC_SITE_URL ??
+        process.env.NEXT_PUBLIC_APP_URL ??
+        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
+    return raw.endsWith("/") ? raw.slice(0, -1) : raw;
+}
+
+async function getProjectMetadata(id: string) {
+    try {
+        return await prisma.project.findUnique({
+            where: { id },
+            select: {
+                id: true,
+                name: true,
+                shortDescription: true,
+                reviewed: true,
+                images: {
+                    orderBy: [{ isMain: "desc" }, { createdAt: "asc" }],
+                    select: { url: true },
+                },
+            },
+        });
+    } catch (error) {
+        if (!isMissingProjectTablesError(error)) {
+            throw error;
+        }
+
+        return null;
+    }
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+    const { id } = await params;
+    if (!id?.trim()) {
+        return {};
+    }
+
+    const project = await getProjectMetadata(id);
+    if (!project) {
+        return {};
+    }
+
+    const siteUrl = getSiteUrl();
+    const previewImage = project.images[0]?.url ?? `${siteUrl}/images/icon.png`;
+
+    return {
+        title: project.name,
+        description: project.shortDescription,
+        alternates: {
+            canonical: `/projects/${project.id}`,
+        },
+        openGraph: {
+            type: "article",
+            siteName: "CCraft Studio",
+            title: project.name,
+            description: project.shortDescription,
+            url: `/projects/${project.id}`,
+            images: [previewImage],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: project.name,
+            description: project.shortDescription,
+            images: [previewImage],
+        },
+        robots: project.reviewed
+            ? {
+                index: true,
+                follow: true,
+            }
+            : {
+                index: false,
+                follow: false,
+            },
+    };
+}
 
 export default async function ProjectDetailsPage({
     params,

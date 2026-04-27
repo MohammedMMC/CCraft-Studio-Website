@@ -53,7 +53,7 @@ export default function ProjectCard({ project, view = "user" }: ProjectCardProps
 
             <div className="flex flex-col gap-4 justify-between p-4 h-full">
                 <div className="flex flex-col gap-2">
-                    <h3 className="font-semibold text-white line-clamp-1">{project.name}</h3>
+                    <p className="font-semibold text-white line-clamp-1">{project.name}</p>
                     <p className="text-sm text-white/80 line-clamp-3">{project.shortDescription}</p>
                 </div>
                 {(view === "owner" || view === "user") && (

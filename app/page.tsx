@@ -1,9 +1,30 @@
 
+import type { Metadata } from "next";
 import ScreenLayout from "../components/ScreenLayout";
 import Button from "../components/Button";
 import Image from "next/image";
 import PreviewSwiper from "@/components/PreviewSwiper";
 import { LINKS } from "@/lib/links";
+
+export const metadata: Metadata = {
+  title: "Home",
+  description:
+    "Design and build CC: Tweaked apps faster with CCraft Studio tools, templates, and project previews.",
+  openGraph: {
+    title: "CCraft Studio",
+    description:
+      "Design and build CC: Tweaked apps faster with CCraft Studio tools, templates, and project previews.",
+    url: "/",
+    images: [
+      {
+        url: "/images/preview1.png",
+        width: 1280,
+        height: 720,
+        alt: "CCraft Studio app preview",
+      },
+    ],
+  },
+};
 
 export default function HomePage() {
   return (

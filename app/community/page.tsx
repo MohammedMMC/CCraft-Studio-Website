@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import ProjectCard from "@/components/ProjectCard";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -5,6 +6,19 @@ import { isMissingProjectTablesError } from "@/lib/projects/db-guards";
 import ScreenLayout from "../../components/ScreenLayout";
 import TagSelectDropdown from "@/components/TagSelectDropdown";
 import Button from "@/components/Button";
+
+export const metadata: Metadata = {
+  title: "Community",
+  description:
+    "Explore community-made CC: Tweaked projects, filter by tags, and discover the most liked and downloaded builds.",
+  openGraph: {
+    title: "Community Projects | CCraft Studio",
+    description:
+      "Explore community-made CC: Tweaked projects, filter by tags, and discover the most liked and downloaded builds.",
+    url: "/community",
+    images: ["/images/preview2.png"],
+  },
+};
 
 type CommunitySearchParams = {
   sortBy?: string | string[];

@@ -1,4 +1,18 @@
+import type { Metadata } from "next";
 import ScreenLayout from "@/components/ScreenLayout";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description:
+    "Read how CCraft Studio collects, uses, and protects account and project data across the platform.",
+  openGraph: {
+    title: "Privacy Policy | CCraft Studio",
+    description:
+      "Read how CCraft Studio collects, uses, and protects account and project data across the platform.",
+    url: "/pp",
+    images: ["/images/icon.png"],
+  },
+};
 
 export default function PrivacyPolicyPage() {
   return (

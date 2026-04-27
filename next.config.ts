@@ -9,6 +9,7 @@ const contentSecurityPolicy = `
   frame-ancestors 'none';
   form-action 'self';
   script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ""} https://*.clerk.com https://clerk.ccraft.studio https://accounts.ccraft.studio https://va.vercel-scripts.com https://static.cloudflareinsights.com;
+  worker-src 'self' blob:;
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://img.clerk.com https://clerk.ccraft.studio https://accounts.ccraft.studio;
   font-src 'self' data:;

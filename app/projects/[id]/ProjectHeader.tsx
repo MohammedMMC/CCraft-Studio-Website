@@ -79,7 +79,7 @@ export default function ProjectHeader({
                 </div>
             </div>
             <div className="ml-auto flex flex-row gap-2 h-16">
-                <Button disabled={isToggleLikePending} className="h-full"
+                <Button disabled={isToggleLikePending || !viewerId} className="h-full"
                     onClick={() => viewerId ? startToggleLikeTransition(() => toggleProjectLike(projectId, pathname)) : null}
                     colors={isLikedByViewer ? `bg-red-500/80 shadow-red-600` : `bg-gray/80 shadow-gray`}
                 >

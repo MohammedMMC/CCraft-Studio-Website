@@ -75,7 +75,7 @@ export default function ProjectTabs({
 
     const tabClassName = (tab: TabKey) => `
         py-2! px-4! text-sm!
-        ${activeTab === tab ? "shadow-[0_0px_0_0]! translate-y-1" : "shadow-[0_4px_0_0]!"}
+        ${activeTab === tab ? "shadow-[0_0px_0_0]! translate-y-1" : "shadow-[0_4px_0_0]"}
     `;
     const tabButtonColor = (tab: TabKey) => activeTab === tab
         ? "bg-primary/85 text-shadow-primary shadow-primary"

@@ -84,7 +84,7 @@ input[type="file"]::file-selector-button {
   ) !important;
   --md-editor-box-shadow-color: color-mix(
     in srgb,
-    var(--color-white) 28%,
+    var(--color-white) 30%,
     transparent
   ) !important;
   --color-canvas-default: color-mix(
@@ -95,12 +95,17 @@ input[type="file"]::file-selector-button {
   --color-fg-default: var(--color-white);
   --color-border-default: color-mix(
     in srgb,
-    var(--color-white) 28%,
+    var(--color-white) 30%,
     transparent
   ) !important;
   --color-neutral-muted: color-mix(
     in srgb,
-    var(--color-white) 12%,
+    var(--color-white) 20%,
+    transparent
+  ) !important;
+  --color-border-muted: color-mix(
+    in srgb,
+    var(--color-white) 20%,
     transparent
   ) !important;
   --color-accent-fg: var(--color-lime) !important;

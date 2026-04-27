@@ -34,6 +34,12 @@ export async function toggleProjectLike(projectId: string, pagePath: string) {
     const { userId } = await auth();
     if (!userId) return;
 
+    const user = await prisma.user.findUnique({
+        where: { clerkId: userId },
+        select: { id: true, },
+    });
+    if (!user) return;
+
     const project = await prisma.project.findUnique({
         where: { id: projectId },
         select: { likes: true },
@@ -43,9 +49,9 @@ export async function toggleProjectLike(projectId: string, pagePath: string) {
         throw new Error("Project not found");
     }
 
-    const newLikes = project.likes.includes(userId)
-        ? project.likes.filter((id) => id !== userId)
-        : [...project.likes, userId];
+    const newLikes = project.likes.includes(user.id)
+        ? project.likes.filter((id) => id !== user.id)
+        : [...project.likes, user.id];
 
     await prisma.project.update({
         where: { id: projectId },

@@ -130,7 +130,7 @@ export default function ProjectTabs({
             {showSettings && activeTab === "settings" && (
                 <section id="settings" className="space-y-4">
                     <div className={"cardcb p-4 text-shadow-[0_2px] " + statusData.className}>
-                        <h1 className="font-semibold text-white tracking-wider">Status: <span>{statusData.label}</span></h1>
+                        <h2 className="font-semibold text-white tracking-wider">Status: <span>{statusData.label}</span></h2>
 
                         {reviewed && latestReview.message && (
                             <p className="text-sm text-white/90 mt-2">{(latestReview.rejected ? "Reason: " : "Message: ")} <span>{latestReview.message}</span></p>

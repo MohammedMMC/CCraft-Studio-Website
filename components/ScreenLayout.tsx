@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import Image from "next/image";
 import Navbar from "./Navbar";
+import { LINKS } from "@/lib/links";
 
 type ScreenLayoutProps = {
   children?: ReactNode;
@@ -57,8 +58,9 @@ export default async function ScreenLayout({
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">Explore</p>
                 <nav className="grid gap-2 text-sm text-neutral-500">
                   <Link href="/community" className="transition-colors hover:text-neutral-800">Community</Link>
-                  <Link href="/dashboard" className="transition-colors hover:text-neutral-800">Dashboard</Link>
-                  <Link href="/discord" className="transition-colors hover:text-neutral-800">Discord</Link>
+                  <Link href={LINKS.DISCORD} className="transition-colors hover:text-neutral-800">Discord</Link>
+                  <Link href={LINKS.GITHUB} className="transition-colors hover:text-neutral-800">Github</Link>
+                  <Link href={LINKS.GITHUB_ISSUES} className="transition-colors hover:text-neutral-800">Issues</Link>
                 </nav>
               </div>
 

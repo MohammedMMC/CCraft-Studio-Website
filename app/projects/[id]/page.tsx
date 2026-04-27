@@ -9,6 +9,7 @@ import ProjectTabs from "./ProjectTabs";
 import ProjectSide from "./ProjectSide";
 import ProjectHeader from "./ProjectHeader";
 import { getSiteUrl } from "@/lib/site-url";
+import { metadata } from "@/app/layout";
 
 async function getProjectMetadata(id: string) {
     try {
@@ -19,6 +20,7 @@ async function getProjectMetadata(id: string) {
                 name: true,
                 shortDescription: true,
                 reviewed: true,
+                tags: true,
                 images: {
                     orderBy: [{ isMain: "desc" }, { createdAt: "asc" }],
                     select: { url: true },
@@ -66,12 +68,7 @@ export async function generateMetadata({
             url: `/projects/${project.id}`,
             images: [previewImage],
         },
-        twitter: {
-            card: "summary_large_image",
-            title: project.name,
-            description: project.shortDescription,
-            images: [previewImage],
-        },
+        keywords: metadata.keywords?.concat(...project.tags) || [],
         robots: project.reviewed
             ? {
                 index: true,

@@ -6,6 +6,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { getSiteUrl } from "@/lib/site-url";
 
+const siteUrl = getSiteUrl();
+
 const minecraftia = localFont({
   src: "../public/fonts/Minecraftia.ttf",
   variable: "--font-minecraftia",
@@ -13,7 +15,7 @@ const minecraftia = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(getSiteUrl()),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "CCraft Studio",
     template: "%s | CCraft Studio",
@@ -23,10 +25,15 @@ export const metadata: Metadata = {
   keywords: [
     "CCraft Studio",
     "CC: Tweaked",
+    "CC: Tweaked Projects",
+    "ComputerCraft",
+    "ComputerCraft Projects",
     "Minecraft mod",
-    "CC: Tweaked projects",
+    "Minecraft",
+    "Minecraft CC: Tweaked",
+    "Minecraft ComputerCraft",
     ".ccproj",
-    "Lua",
+    "CC Lua",
   ],
   authors: [{ name: "CCraft Studio" }],
   creator: "CCraft Studio",
@@ -53,12 +60,6 @@ export const metadata: Metadata = {
         alt: "CCraft Studio logo",
       },
     ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "CCraft Studio",
-    description: "Browse, share, and manage CC: Tweaked projects.",
-    images: ["/images/icon.png"],
   },
   robots: {
     index: true,

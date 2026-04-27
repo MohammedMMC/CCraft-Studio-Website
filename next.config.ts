@@ -8,12 +8,12 @@ const contentSecurityPolicy = `
   object-src 'none';
   frame-ancestors 'none';
   form-action 'self';
-  script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ""} https://*.clerk.com https://*.clerk.accounts.dev https://va.vercel-scripts.com;
+  script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ""} https://*.clerk.com https://clerk.ccraft.studio https://accounts.ccraft.studio https://va.vercel-scripts.com https://static.cloudflareinsights.com;
   style-src 'self' 'unsafe-inline';
-  img-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://img.clerk.com;
+  img-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://img.clerk.com https://clerk.ccraft.studio https://accounts.ccraft.studio;
   font-src 'self' data:;
-  connect-src 'self' ${isDev ? "ws: wss:" : ""} https://*.clerk.com https://*.clerk.accounts.dev https://clerk-telemetry.com https://vitals.vercel-insights.com;
-  frame-src 'self' https://*.clerk.com https://*.clerk.accounts.dev https://challenges.cloudflare.com;
+  connect-src 'self' ${isDev ? "ws: wss:" : ""} https://*.clerk.com https://clerk.ccraft.studio https://accounts.ccraft.studio https://clerk-telemetry.com https://vitals.vercel-insights.com https://cloudflareinsights.com;
+  frame-src 'self' https://*.clerk.com https://clerk.ccraft.studio https://accounts.ccraft.studio https://challenges.cloudflare.com;
   upgrade-insecure-requests;
 `;
 

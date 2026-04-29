@@ -1,10 +1,11 @@
 "use server";
 
 import { syncCurrentUserToDatabase } from "@/lib/auth/sync-user";
+import { sanitizeFilename, slugify } from "@/lib/functions";
 import { prisma } from "@/lib/prisma";
 import { CreateProjectFieldErrors, validateCreateProjectForm, validateUpdateProjectForm } from "@/lib/projects/validation";
+import { uploadToBlob } from "@/lib/storage";
 import { auth } from "@clerk/nextjs/server";
-import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -12,33 +13,6 @@ export type CreateProjectActionState = {
     status: "idle" | "success" | "error";
     message: string;
     fieldErrors: CreateProjectFieldErrors;
-}
-
-type UploadedBlob = {
-    url: string;
-    pathname: string;
-    contentType: string;
-    size: number;
-}
-
-function sanitizeFilename(fileName: string): string {
-    return fileName
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^a-z0-9._-]/g, "")
-        .replace(/-+/g, "-")
-        .slice(0, 120) || "file";
-}
-
-function slugify(input: string): string {
-    return input
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^a-z0-9-]/g, "")
-        .replace(/-+/g, "-")
-        .slice(0, 80);
 }
 
 function isNextRedirectError(error: unknown): boolean {
@@ -51,26 +25,6 @@ function isNextRedirectError(error: unknown): boolean {
     );
 }
 
-async function uploadToBlob(
-    file: File,
-    pathname: string,
-    token: string,
-): Promise<UploadedBlob> {
-    const uploaded = await put(pathname, file, {
-        access: "public",
-        token,
-        addRandomSuffix: true,
-        contentType: file.type || "application/octet-stream",
-    });
-
-    return {
-        url: uploaded.url,
-        pathname: uploaded.pathname,
-        contentType: file.type || "application/octet-stream",
-        size: file.size,
-    };
-}
-
 export async function createProjectAction(
     _prevState: CreateProjectActionState,
     formData: FormData,
@@ -80,16 +34,6 @@ export async function createProjectAction(
         return {
             status: "error",
             message: "You must be signed in to create a project.",
-            fieldErrors: {},
-        };
-    }
-
-    const token = process.env.BLOB_READ_WRITE_TOKEN;
-    if (!token) {
-        return {
-            status: "error",
-            message:
-                "Server is missing BLOB_READ_WRITE_TOKEN. Add it to your .env before uploading.",
             fieldErrors: {},
         };
     }
@@ -122,7 +66,7 @@ export async function createProjectAction(
         const projectFileUpload = await uploadToBlob(
             payload.projectFile,
             `${folder}/files/${sanitizeFilename(payload.name + "-" + payload.version + ".ccproj")}`,
-            token,
+            "main",
         );
 
         const imageUploads = await Promise.all(
@@ -130,7 +74,7 @@ export async function createProjectAction(
                 uploadToBlob(
                     imageFile,
                     `${folder}/images/${index + 1}-${sanitizeFilename(imageFile.name)}`,
-                    token,
+                    "main",
                 ),
             ),
         );
@@ -272,23 +216,13 @@ export async function updateProjectAction(
             | undefined;
 
         if (shouldUploadProjectFile || shouldReplaceImages) {
-            const token = process.env.BLOB_READ_WRITE_TOKEN;
-            if (!token) {
-                return {
-                    status: "error",
-                    message:
-                        "Server is missing BLOB_READ_WRITE_TOKEN. Add it to your .env before uploading.",
-                    fieldErrors: {},
-                };
-            }
-
             const folder = `projects/${user.id}/updates/${projectId}-${Date.now()}`;
 
             if (shouldUploadProjectFile && payload.projectFile) {
                 const projectFileUpload = await uploadToBlob(
                     payload.projectFile,
                     `${folder}/files/${sanitizeFilename(payload.name + "-" + payload.version + ".ccproj")}`,
-                    token,
+                    "main",
                 );
 
                 nextProjectFile = {
@@ -304,7 +238,7 @@ export async function updateProjectAction(
                         uploadToBlob(
                             imageFile,
                             `${folder}/images/${index + 1}-${sanitizeFilename(imageFile.name)}`,
-                            token,
+                            "main",
                         ),
                     ),
                 );

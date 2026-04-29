@@ -12,15 +12,16 @@ enum UserRole {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  clerkId   String   @unique
-  email     String   @unique
+  id        String    @id @default(cuid())
+  clerkId   String    @unique
+  email     String    @unique
   firstName String?
   lastName  String?
   imageUrl  String?
-  role      UserRole @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  role      UserRole  @default(USER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  apiToken  String?   @unique
 
   projects         Project[]        @relation("ProjectOwner")
   projectComments  ProjectComment[]

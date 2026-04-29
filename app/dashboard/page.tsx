@@ -4,23 +4,22 @@ import { prisma } from "@/lib/prisma";
 import { isMissingProjectTablesError } from "@/lib/projects/db-guards";
 import ProjectCard from "@/components/ProjectCard";
 import Button from "@/components/Button";
+import TokenSection from "./TokenSection";
 
 export default async function DashboardPage() {
   const { userId } = await auth();
 
-  const user = userId
-    ? await prisma.user.findUnique({
-      where: { clerkId: userId },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        role: true,
-        createdAt: true,
-      },
-    })
-    : null;
+  const user = userId ? await prisma.user.findUnique({
+    where: { clerkId: userId },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      role: true,
+      createdAt: true,
+    },
+  }) : null;
 
   const projects = user
     ? await (async () => {
@@ -49,10 +48,14 @@ export default async function DashboardPage() {
 
   return (
     <ScreenLayout>
+      <section className="mb-10">
+        <h1 className="text-2xl font-bold text-shadow-gray/20 text-shadow-[0_2px]">Welcome back, {user?.firstName || "User"}!</h1>
+        <TokenSection />
+      </section>
       {/* Projects Section */}
       <section>
         <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold text-shadow-gray/20 text-shadow-[0_2px]">Your Projects</h2>
+          <h1 className="text-lg font-semibold text-shadow-gray/20 text-shadow-[0_2px]">Your Projects</h1>
           <Button
             href="/dashboard/projects/new"
             className="text-sm px-4! py-2! justify-center"

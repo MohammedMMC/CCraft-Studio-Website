@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-
 type BaseProps = {
     children: React.ReactNode;
     className?: string;

@@ -21,7 +21,7 @@ const contentSecurityPolicy = `
 const securityHeaders = [
   {
     key: "Content-Security-Policy",
-    value: contentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
+    value: isDev ? "" : contentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
   },
   {
     key: "Referrer-Policy",

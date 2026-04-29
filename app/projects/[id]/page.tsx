@@ -4,12 +4,12 @@ import { notFound, redirect } from "next/navigation";
 import ScreenLayout from "../../../components/ScreenLayout";
 import { prisma } from "../../../lib/prisma";
 import { isMissingProjectTablesError } from "../../../lib/projects/db-guards";
-import { formatDate } from "../../../lib/projects/validation";
 import ProjectTabs from "./ProjectTabs";
 import ProjectSide from "./ProjectSide";
 import ProjectHeader from "./ProjectHeader";
 import { getSiteUrl } from "@/lib/site-url";
 import { metadata } from "@/app/layout";
+import { formatDate } from "@/lib/functions";
 
 async function getProjectMetadata(id: string) {
     try {

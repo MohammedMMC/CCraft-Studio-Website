@@ -1,9 +1,10 @@
 import { reviewProjectAction } from "@/app/dashboard/admin/actions";
-import { formatBytes, formatDate, PROJECT_LIMITS } from "@/lib/projects/validation";
+import { PROJECT_LIMITS } from "@/lib/projects/validation";
 import { Project, ProjectComment, ProjectImage, ReviewData, User } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "./Button";
+import { formatBytes, formatDate } from "@/lib/functions";
 
 type ProjectCardProps = {
     project: Project & {
@@ -18,9 +19,10 @@ type ProjectCardProps = {
     children?: React.ReactNode;
     colors?: string;
     view?: "user" | "owner" | "admin";
+    componentsVersions?: { version: string }[];
 };
 
-export default function ProjectCard({ project, view = "user" }: ProjectCardProps) {
+export default function ProjectCard({ project, view = "user", componentsVersions }: ProjectCardProps) {
     const previewImage = project.images.find((image) => image.isMain) ?? project.images[0];
     const latestReview = project.reviewLog?.[0];
     const ownerName = [project?.owner?.firstName, project?.owner?.lastName]
@@ -126,13 +128,34 @@ export default function ProjectCard({ project, view = "user" }: ProjectCardProps
                         <form action={reviewProjectAction} className="space-y-2">
                             <input type="hidden" name="projectId" value={project.id} />
                             <label className="block text-sm font-semibold text-white">
-                                Review Message
+                                Review Data
                             </label>
                             <textarea
                                 name="message"
-                                className="mt-1 bg-white min-h-20 w-full rounded-sm border border-neutral-300 px-3 py-2 text-sm"
+                                className="mb-3 min-h-20 w-full px-3 py-2 text-sm"
                                 maxLength={PROJECT_LIMITS.reviewLog.max}
                                 placeholder="Write why this project was approved or rejected."
+                            />
+                            <select
+                                name="componentsVersion"
+                                className="mb-3 w-full px-3 py-2 text-sm"
+                                required
+                            >
+                                <option value="">Select a version</option>
+                                {componentsVersions && componentsVersions.length > 0 && (
+                                    componentsVersions.map((version) => (
+                                        <option key={version.version} value={version.version}>
+                                            {version.version}
+                                        </option>
+                                    ))
+                                )}
+                            </select>
+                            <input
+                                name="projectFiles"
+                                type="file"
+                                accept="application/zip"
+                                required
+                                className="mb-4 w-full px-3 py-2 text-sm"
                             />
                             <div className="flex flex-row justify-between gap-2">
                                 <Button

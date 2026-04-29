@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { isMissingProjectTablesError } from "@/lib/projects/db-guards";
 import ScreenLayout from "../../../components/ScreenLayout";
 import ProjectCard from "@/components/ProjectCard";
+import Button from "@/components/Button";
+import { formatBytes, formatDate } from "@/lib/functions";
 
 export default async function DashboardAdminPage() {
   const { userId } = await auth();
@@ -47,42 +49,19 @@ export default async function DashboardAdminPage() {
     }
   })();
 
-  const latestReviewedProjects = await (async () => {
-    try {
-      const reviewedProjects = await prisma.project.findMany({
-        where: { reviewed: true, reviewLog: { some: {} } },
-        include: {
-          owner: true,
-          images: {
-            orderBy: [{ isMain: "desc" }, { createdAt: "asc" }],
-          },
-          reviewLog: {
-            orderBy: { reviewedAt: "desc" },
-            take: 1,
-          },
-        },
-      });
-
-      return reviewedProjects
-        .sort((a, b) => {
-          const aReviewedAt = a.reviewLog[0]?.reviewedAt?.getTime() ?? 0;
-          const bReviewedAt = b.reviewLog[0]?.reviewedAt?.getTime() ?? 0;
-          return bReviewedAt - aReviewedAt;
-        })
-        .slice(0, 6);
-    } catch (error) {
-      if (!isMissingProjectTablesError(error)) {
-        throw error;
-      }
-
-      return [];
-    }
-  })();
+  const componentsVersions = await prisma.componentsVersions.findMany({
+    orderBy: { createdAt: "desc" },
+    select: {
+      version: true,
+      createdAt: true,
+      size: true
+    },
+  });
 
   return (
     <ScreenLayout>
       <section>
-        <h2 className="text-lg font-semibold">Pending Project Reviews</h2>
+        <h1 className="text-lg font-semibold">Pending Project Reviews</h1>
 
         {pendingProjects.length === 0 ? (
           <div className="mt-4 cardcb p-4 text-sm text-white/90">
@@ -92,28 +71,44 @@ export default async function DashboardAdminPage() {
           <div className="mt-4 grid gap-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1">
             {pendingProjects.map((project) => {
               return (
-                <ProjectCard key={project.id} project={project} view="admin" />
+                <ProjectCard key={project.id} project={project} view="admin" componentsVersions={componentsVersions} />
               );
             })}
           </div>
         )}
       </section>
       <section className="mt-10">
-        <h2 className="text-lg font-semibold">Latest Project Reviews</h2>
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <h1 className="text-lg font-semibold text-shadow-gray/20 text-shadow-[0_2px]">Components Versions</h1>
+          <Button
+            href="/dashboard/admin/versions/new"
+            className="text-sm px-4! py-2! justify-center"
+          >Create Version</Button>
+        </div>
 
-        {latestReviewedProjects.length === 0 ? (
-          <div className="mt-4 cardcb p-4 text-sm text-white/90">
-            Couldn&apos;t find any reviewed projects.
-          </div>
-        ) : (
-          <div className="mt-4 grid gap-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1">
-            {latestReviewedProjects.map((project) => {
-              return (
-                <ProjectCard key={project.id} project={project} view="user" />
-              );
-            })}
-          </div>
-        )}
+        <div>
+          {componentsVersions.length === 0 ? (
+            <div className="mt-4 cardcb p-4 text-sm text-white/90">
+              Couldn&apos;t find any components versions.
+            </div>
+          ) : (
+            <div className="mt-4 grid gap-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1">
+              {componentsVersions.map((componentsVersion) => {
+                return (
+                  <div key={componentsVersion.version} className="cardcb p-4">
+                    <h2 className="text-lg font-semibold text-white mb-2">{componentsVersion.version}</h2>
+                    <p className="text-sm text-white/80">
+                      Created at: {formatDate(componentsVersion.createdAt)}
+                    </p>
+                    <p className="text-sm text-white/80">
+                      Size: {formatBytes(componentsVersion.size)}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </section>
     </ScreenLayout>
   );

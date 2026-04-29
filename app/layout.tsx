@@ -24,9 +24,11 @@ export const metadata: Metadata = {
   applicationName: "CCraft Studio",
   keywords: [
     "CCraft Studio",
+    "Computer Craft Studio",
     "CC: Tweaked",
     "CC: Tweaked Projects",
     "ComputerCraft",
+    "Computer Craft",
     "ComputerCraft Projects",
     "Minecraft mod",
     "Minecraft",

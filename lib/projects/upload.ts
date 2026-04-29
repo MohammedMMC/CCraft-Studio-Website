@@ -1,26 +1,23 @@
-import { sanitizeFilename } from "../functions";
 import { uploadToBlob } from "../storage";
 
-
-export async function uploadProject({userId, projectId, file, isTemp = false}: {
+export async function uploadProject({ userId, projectId, file, isTemp = false }: {
     userId: string;
     projectId?: string;
     file: File;
     isTemp?: boolean;
 }) {
-    const folder = `${isTemp ? "temp" : "projects"}/${userId}/`;
+    const filename = `${isTemp ? "temp" : projectId}.zip`;
 
-    if (file) {
-        const projectFileUpload = await uploadToBlob(
-            file,
-            `${folder}/files/${sanitizeFilename(file.name)}`,
-            "projects",
-        );
+    const projectFileUpload = await uploadToBlob(
+        file,
+        `${userId}/files/${filename}`,
+        "projects",
+    );
 
-        return {
-            url: projectFileUpload.url,
-            name: file.name,
-            size: file.size,
-        };
-    }
+    return {
+        url: projectFileUpload.url,
+        pathname: projectFileUpload.pathname,
+        name: filename,
+        size: file.size,
+    };
 }

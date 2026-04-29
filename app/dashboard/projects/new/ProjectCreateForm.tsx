@@ -6,9 +6,10 @@ import {
     createProjectAction,
     updateProjectAction,
 } from "./actions";
-import { CreateProjectFieldErrors, formatBytes, PROJECT_LIMITS } from "@/lib/projects/validation";
+import { CreateProjectFieldErrors, PROJECT_LIMITS } from "@/lib/projects/validation";
 import MDEditor from "@uiw/react-md-editor";
 import Button from "@/components/Button";
+import { formatBytes } from "@/lib/functions";
 
 const createProjectInitialState = {
     status: "idle" as const,

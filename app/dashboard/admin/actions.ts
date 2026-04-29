@@ -32,7 +32,13 @@ export async function reviewProjectAction(formData: FormData): Promise<void> {
     if (projectFiles.size > PROJECT_LIMITS.projectFilesSizeBytes) return;
     if (!(await isZipFile(projectFiles))) return;
 
-    const uploadedProject = await uploadProject({ file: projectFiles, userId, projectId, isTemp: false });
+    const projectUser = await prisma.project.findUnique({
+        where: { id: projectId },
+        select: { ownerId: true },
+    });
+    if (!projectUser) return;
+
+    const uploadedProject = await uploadProject({ file: projectFiles, userId: projectUser.ownerId, projectId, isTemp: false });
 
     try {
         await prisma.$transaction(async (tx) => {

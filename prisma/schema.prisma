@@ -36,7 +36,6 @@ model User {
 model Project {
   id               String       @id @default(cuid())
   ownerId          String
-  projectFilesId   String?      @unique
   name             String
   shortDescription String
   description      String

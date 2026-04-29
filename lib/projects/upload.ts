@@ -10,8 +10,8 @@ export async function uploadProject({ userId, projectId, file, isTemp = false }:
 
     const projectFileUpload = await uploadToBlob(
         file,
-        `${userId}/files/${filename}`,
-        "projects",
+        `${userId}/${filename}`,
+        "projects"
     );
 
     return {

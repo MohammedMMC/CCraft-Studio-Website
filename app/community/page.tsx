@@ -128,7 +128,7 @@ export default async function CommunityPage({
   return (
     <ScreenLayout>
       <section>
-        <div className="mb-4 flex flex-wrap items-end gap-4">
+        <div className="mb-6 flex flex-wrap items-end gap-4">
           <div className="grow">
             <h1 className="text-lg font-semibold">Community Feed</h1>
             <p className="text-sm text-neutral-600">Discover projects from the community.</p>

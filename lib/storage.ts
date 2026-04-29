@@ -20,15 +20,16 @@ export async function uploadToBlob(
     storageType: "main" | "projects" = "main",
 ): Promise<UploadedBlob> {
     const token = storageType === "projects" ? projectsStorageToken : mainStorageToken;
+    const access = storageType === "projects" ? "private" : "public";
 
     if (!token) {
         throw new Error(`Missing storage token! Cannot upload file.`);
     }
 
     const uploaded = await put(pathname, file, {
-        access: "public",
+        access,
         token,
-        addRandomSuffix: true,
+        addRandomSuffix: false,
         contentType: file.type || "application/octet-stream",
     });
 

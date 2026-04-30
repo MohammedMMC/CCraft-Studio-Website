@@ -1,16 +1,27 @@
 import type { Metadata } from "next";
 import ScreenLayout from "@/components/ScreenLayout";
+import { generateCanonicalUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
     "Read how CCraft Studio collects, uses, and protects account and project data across the platform.",
+  alternates: {
+    canonical: generateCanonicalUrl("/pp"),
+  },
   openGraph: {
     title: "Privacy Policy | CCraft Studio",
     description:
       "Read how CCraft Studio collects, uses, and protects account and project data across the platform.",
-    url: "/pp",
-    images: ["/images/icon.png"],
+    url: generateCanonicalUrl("/pp"),
+    images: [
+      {
+        url: `${generateCanonicalUrl("/")}/images/icon.png`,
+        width: 512,
+        height: 512,
+        alt: "Privacy Policy",
+      },
+    ],
   },
 };
 

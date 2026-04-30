@@ -1,16 +1,27 @@
 import type { Metadata } from "next";
 import ScreenLayout from "@/components/ScreenLayout";
+import { generateCanonicalUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
     "Review CCraft Studio terms for platform use, user content responsibilities, moderation, and service updates.",
+  alternates: {
+    canonical: generateCanonicalUrl("/tos"),
+  },
   openGraph: {
     title: "Terms of Service | CCraft Studio",
     description:
       "Review CCraft Studio terms for platform use, user content responsibilities, moderation, and service updates.",
-    url: "/tos",
-    images: ["/images/icon.png"],
+    url: generateCanonicalUrl("/tos"),
+    images: [
+      {
+        url: `${generateCanonicalUrl("/")}/images/icon.png`,
+        width: 512,
+        height: 512,
+        alt: "Terms of Service",
+      },
+    ],
   },
 };
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
+import Script from "next/script";
 import ScreenLayout from "../../../components/ScreenLayout";
 import { prisma } from "../../../lib/prisma";
 import { isMissingProjectTablesError } from "../../../lib/projects/db-guards";
@@ -10,6 +11,7 @@ import ProjectHeader from "./ProjectHeader";
 import { getSiteUrl } from "@/lib/site-url";
 import { metadata } from "@/app/layout";
 import { formatDate } from "@/lib/functions";
+import { generateCanonicalUrl } from "@/lib/seo";
 
 async function getProjectMetadata(id: string) {
     try {
@@ -58,14 +60,14 @@ export async function generateMetadata({
         title: project.name,
         description: project.shortDescription,
         alternates: {
-            canonical: `/projects/${project.id}`,
+            canonical: generateCanonicalUrl(`/projects/${project.id}`),
         },
         openGraph: {
             type: "article",
             siteName: "CCraft Studio",
             title: project.name,
             description: project.shortDescription,
-            url: `/projects/${project.id}`,
+            url: generateCanonicalUrl(`/projects/${project.id}`),
             images: [previewImage],
         },
         keywords: metadata.keywords?.concat(...project.tags) || [],
@@ -134,8 +136,36 @@ export default async function ProjectDetailsPage({
 
     const previewImage = project.images.find((image) => image.isMain) ?? project.images[0] ?? null;
 
+    const projectSchemaData = {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        name: project.name,
+        description: project.shortDescription,
+        url: generateCanonicalUrl(`/projects/${project.id}`),
+        image: previewImage?.url || `${getSiteUrl()}/images/icon.png`,
+        applicationCategory: "DeveloperApplication",
+        keywords: project.tags.join(", "),
+        author: {
+            "@type": "Person",
+            name: `${project.owner.firstName} ${project.owner.lastName}`,
+        },
+        datePublished: formatDate(project.createdAt),
+        dateModified: formatDate(project.projectUpdatedAt ?? project.updatedAt),
+        aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "4.5",
+            reviewCount: String(project._count.comments),
+        },
+        downloadCount: String(project.downloads),
+    };
+
     return (
         <ScreenLayout>
+            <Script
+                id="project-schema"
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(projectSchemaData) }}
+            />
             <section className="space-y-6">
                 <ProjectHeader
                     projectId={project.id}

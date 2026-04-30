@@ -46,17 +46,17 @@ export const metadata: Metadata = {
     apple: "/images/icon.png",
   },
   alternates: {
-    canonical: "./",
+    canonical: siteUrl,
   },
   openGraph: {
     type: "website",
     siteName: "CCraft Studio",
     title: "CCraft Studio",
     description: "Browse, share, and manage CC: Tweaked projects.",
-    url: "/",
+    url: siteUrl,
     images: [
       {
-        url: "/images/icon.png",
+        url: `${siteUrl}/images/icon.png`,
         width: 512,
         height: 512,
         alt: "CCraft Studio logo",
@@ -85,11 +85,28 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "CCraft Studio",
+    url: siteUrl,
+    logo: `${siteUrl}/images/icon.png`,
+    description: "A platform for browsing, sharing, and managing CC: Tweaked projects.",
+    alternateName: ["Computer Craft Studio", "CCraft"],
+    sameAs: ["https://github.com/ccraft-studio"],
+  };
+
   return (
     <html
       lang="en"
       className={`${minecraftia.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+      </head>
       <SpeedInsights />
       <Analytics />
       

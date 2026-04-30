@@ -6,17 +6,28 @@ import { isMissingProjectTablesError } from "@/lib/projects/db-guards";
 import ScreenLayout from "../../components/ScreenLayout";
 import TagSelectDropdown from "@/components/TagSelectDropdown";
 import Button from "@/components/Button";
+import { generateCanonicalUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Community",
   description:
     "Explore community-made CC: Tweaked projects, filter by tags, and discover the most liked and downloaded builds.",
+  alternates: {
+    canonical: generateCanonicalUrl("/community"),
+  },
   openGraph: {
     title: "Community Projects | CCraft Studio",
     description:
       "Explore community-made CC: Tweaked projects, filter by tags, and discover the most liked and downloaded builds.",
-    url: "/community",
-    images: ["/images/preview2.png"],
+    url: generateCanonicalUrl("/community"),
+    images: [
+      {
+        url: `${generateCanonicalUrl("/")}/images/preview2.png`,
+        width: 1280,
+        height: 720,
+        alt: "Community Projects",
+      },
+    ],
   },
 };
 

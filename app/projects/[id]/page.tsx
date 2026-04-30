@@ -184,6 +184,7 @@ export default async function ProjectDetailsPage({
 
                 <div className="grid gap-6 md:grid-cols-[1.8fr_1fr] grid-cols-1">
                     <ProjectTabs
+                        projectName={project.name}
                         projectId={project.id}
                         latestReview={{
                             message: latestReview?.message ?? "",

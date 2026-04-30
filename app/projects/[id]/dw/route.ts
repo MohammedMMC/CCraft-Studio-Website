@@ -11,10 +11,18 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     const { id } = await params;
     if (!id?.trim()) notFound();
 
-    const projectFiles = await prisma.projectFiles.findUnique({
-        where: { projectId: id },
-        select: { pathname: true, project: { select: { name: true } } },
+    const project = await prisma.project.findFirst({
+        where: {
+            OR: [
+                { id: id },
+                { name: id },
+            ],
+        },
+        select: { name: true, files: { select: { pathname: true } } },
     });
+    if (!project) notFound();
+
+    const projectFiles = project.files;
     if (!projectFiles) notFound();
 
     const file = await getFromBlob(projectFiles.pathname, "projects");
@@ -27,9 +35,6 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     const unzipped = unzipSync(buffer);
     const entries = Object.keys(unzipped).filter((p) => !p.endsWith("/"));
 
-
-    const projectName = projectFiles.project?.name ?? `project_${id}`;
-
     const filesLuaEntries = entries
         .map((e) => {
             const encoded = encodeURIComponent(e).replace(/%2F/g, "/");
@@ -38,12 +43,12 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         })
         .join(",\n");
 
-    const lua = `-- CCraft Studio project downloader\n-- Project: ${projectName}\nlocal projectName = "${projectName}"\nlocal files = {\n${filesLuaEntries}\n}\n\nlocal function ensureDir(path)\n  local parts = {}\n  for part in string.gmatch(path, "[^/]+") do table.insert(parts, part) end\n  table.remove(parts)\n  local cur = ""\n  for i, p in ipairs(parts) do\n    cur = (cur == "" and p or (cur .. "/" .. p))\n    if not fs.exists(cur) then fs.makeDir(cur) end\n  end\nend\n\nprint("Starting download for: " .. projectName)\nfor i, f in ipairs(files) do\n  local fullPath = projectName .. "/" .. f.path\n  ensureDir(fullPath)\n  print("Downloading: " .. f.path)\n  local ok, res = pcall(http.get, f.url)\n  if ok and res then\n    local content = res.readAll()\n    local handle = fs.open(fullPath, "w")\n    handle.write(content)\n    handle.close()\n    res.close()\n  else\n    print("Failed to download: " .. f.path)\n  end\nend\nprint("Download complete. Open /" .. projectName .. " to view files.")\n`;
+    const lua = `-- CCraft Studio project downloader\n-- Project: ${project.name}\nlocal projectName = "${project.name}"\nlocal files = {\n${filesLuaEntries}\n}\n\nlocal function ensureDir(path)\n  local parts = {}\n  for part in string.gmatch(path, "[^/]+") do table.insert(parts, part) end\n  table.remove(parts)\n  local cur = ""\n  for i, p in ipairs(parts) do\n    cur = (cur == "" and p or (cur .. "/" .. p))\n    if not fs.exists(cur) then fs.makeDir(cur) end\n  end\nend\n\nprint("Starting download for: " .. projectName)\nfor i, f in ipairs(files) do\n  local fullPath = projectName .. "/" .. f.path\n  ensureDir(fullPath)\n  print("Downloading: " .. f.path)\n  local ok, res = pcall(http.get, f.url)\n  if ok and res then\n    local content = res.readAll()\n    local handle = fs.open(fullPath, "w")\n    handle.write(content)\n    handle.close()\n    res.close()\n  else\n    print("Failed to download: " .. f.path)\n  end\nend\nprint("Download complete. Open /" .. projectName .. " to view files.")\n`;
 
     return new Response(lua, {
         headers: {
             "Content-Type": "text/plain; charset=utf-8",
-            "Content-Disposition": `attachment; filename="${projectName}.lua"`,
+            "Content-Disposition": `attachment; filename="${project.name}.lua"`,
         },
     });
 }

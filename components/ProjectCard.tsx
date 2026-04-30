@@ -25,6 +25,7 @@ type ProjectCardProps = {
 export default function ProjectCard({ project, view = "user", componentsVersions }: ProjectCardProps) {
     const previewImage = project.images.find((image) => image.isMain) ?? project.images[0];
     const latestReview = project.reviewLog?.[0];
+    void latestReview;
     const ownerName = [project?.owner?.firstName, project?.owner?.lastName]
         .filter(Boolean)
         .join(" ");

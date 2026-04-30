@@ -8,7 +8,7 @@ const contentSecurityPolicy = `
   object-src 'none';
   frame-ancestors 'none';
   form-action 'self';
-  script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ""} https://*.clerk.com https://clerk.ccraft.studio https://accounts.ccraft.studio https://va.vercel-scripts.com https://static.cloudflareinsights.com;
+  script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ""} https://*.clerk.com https://clerk.ccraft.studio https://accounts.ccraft.studio https://va.vercel-scripts.com https://static.cloudflareinsights.com https://*.cloudflare.com;
   worker-src 'self' blob:;
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://img.clerk.com https://clerk.ccraft.studio https://accounts.ccraft.studio;
@@ -80,6 +80,7 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",

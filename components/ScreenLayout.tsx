@@ -39,7 +39,7 @@ export default async function ScreenLayout({
             <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-center sm:text-left lg:items-start">
               <Image
                 src="/images/icon.png"
-                alt="CCraft Studio logo"
+                alt="CCraft Studio Logo"
                 width={56}
                 height={56}
                 className="shrink-0"

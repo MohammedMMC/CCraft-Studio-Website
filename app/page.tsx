@@ -8,7 +8,7 @@ import { LINKS } from "@/lib/links";
 import { generateCanonicalUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Home",
+  title: "Build ComputerCraft Apps & Tools | CCraft Studio",
   description:
     "Design and build CC: Tweaked apps faster with CCraft Studio tools, templates, and project previews.",
   alternates: {

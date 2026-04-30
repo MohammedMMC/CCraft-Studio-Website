@@ -48,7 +48,7 @@ export default function ProjectHeader({
             {previewImageUrl && (
                 <Image
                     src={previewImageUrl}
-                    alt="Preview Image"
+                    alt={projectName + " Preview"}
                     width={100}
                     height={100}
                     className="h-auto rounded-xs w-56 object-cover aspect-video"

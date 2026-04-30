@@ -13,6 +13,7 @@ type TabKey = "description" | "images" | "settings";
 
 type ProjectTabsProps = {
     projectId: string;
+    projectName: string;
     description: string;
     images: Array<{
         id: string;
@@ -50,6 +51,7 @@ function resolveTabFromHash(hash: string, showSettings: boolean): TabKey {
 
 export default function ProjectTabs({
     projectId,
+    projectName,
     description,
     images,
     reviewed,
@@ -123,7 +125,7 @@ export default function ProjectTabs({
                 <section id="images" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {images.length === 0 ? (
                         <p className="text-sm cardcb px-4 py-2 text-white/80 col-span-full">No images uploaded for this project.</p>
-                    ) : images.map((image) => (<ImagePreviewButton src={image.url} key={image.id} />))}
+                    ) : images.map((image, i) => (<ImagePreviewButton alt={`${projectName} Image ${i + 1}`} src={image.url} key={image.id} />))}
                 </section>
             )}
 

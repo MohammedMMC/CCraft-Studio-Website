@@ -4,9 +4,10 @@ import Image from "next/image";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     src: string;
+    alt?: string;
 };
 
-export default function ImagePreviewButton({ src, ...props }: ButtonProps) {
+export default function ImagePreviewButton({ alt, src, ...props }: ButtonProps) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -19,9 +20,9 @@ export default function ImagePreviewButton({ src, ...props }: ButtonProps) {
             >
                 <Image
                     src={src}
-                    alt="Image"
-                    width={640}
-                    height={360}
+                    alt={alt || "Image"}
+                    width={480}
+                    height={240}
                     className="pointer-events-none select-none rounded-xs aspect-video h-auto w-full object-cover"
                     loading="lazy"
                     unoptimized
@@ -35,7 +36,7 @@ export default function ImagePreviewButton({ src, ...props }: ButtonProps) {
                 >
                     <Image
                         src={src}
-                        alt="Preview"
+                        alt={alt ? `${alt} FullScreen` : "Preview"}
                         width={640}
                         height={360}
                         className="max-w-[90vw] max-h-[90vh] rounded-lg shadow-xl"

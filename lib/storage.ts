@@ -1,4 +1,4 @@
-import { put } from "@vercel/blob";
+import { put, get, GetBlobResult } from "@vercel/blob";
 
 export type UploadedBlob = {
     url: string;
@@ -39,4 +39,21 @@ export async function uploadToBlob(
         contentType: file.type || "application/octet-stream",
         size: file.size,
     };
+}
+
+export async function getFromBlob(
+    pathname: string,
+    storageType: "main" | "projects" = "main",
+): Promise<GetBlobResult | null> {
+    const token = storageType === "projects" ? projectsStorageToken : mainStorageToken;
+    const access = storageType === "projects" ? "private" : "public";
+
+    if (!token) {
+        throw new Error(`Missing storage token! Cannot upload file.`);
+    }
+
+    const file = await get(pathname, { access, token });
+    if (!file || file.statusCode !== 200) return null;
+
+    return file;
 }

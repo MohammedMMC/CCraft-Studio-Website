@@ -1,7 +1,7 @@
 import { validateApiToken } from "@/lib/auth/validateApiToken";
 import { isZipFile } from "@/lib/functions";
 import { prisma } from "@/lib/prisma";
-import { uploadProject } from "@/lib/projects/upload";
+import { deleteProject, uploadProject } from "@/lib/projects/upload";
 import { PROJECT_LIMITS } from "@/lib/projects/validation";
 import { getSiteUrl } from "@/lib/site-url";
 import { NextRequest, NextResponse } from "next/server";
@@ -39,6 +39,11 @@ export async function POST(req: NextRequest) {
     }
     if (!(await isZipFile(file))) {
         return NextResponse.json({ error: "Invalid file type." }, { status: 400 });
+    }
+
+    const existingTemp = await prisma.tempProjectFiles.findUnique({ where: { userId: user.id } });
+    if (existingTemp) {
+        await deleteProject({ userId: user.id, isTemp: true });
     }
 
     const project = await uploadProject({ file, userId: user.id, isTemp: true });

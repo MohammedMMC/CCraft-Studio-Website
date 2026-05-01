@@ -1,4 +1,4 @@
-import { put, get, GetBlobResult } from "@vercel/blob";
+import { put, get, GetBlobResult, del } from "@vercel/blob";
 
 export type UploadedBlob = {
     url: string;
@@ -56,4 +56,22 @@ export async function getFromBlob(
     if (!file || file.statusCode !== 200) return null;
 
     return file;
+}
+
+export async function deleteFromBlob(
+    pathname: string,
+    storageType: "main" | "projects" = "main",
+): Promise<boolean> {
+    const token = storageType === "projects" ? projectsStorageToken : mainStorageToken;
+    if (!token) {
+        throw new Error(`Missing storage token! Cannot delete file.`);
+    }
+    
+    try {
+        await del(pathname, { token });
+        return true;
+    } catch (error) {
+        void error;
+        return false;
+    }
 }

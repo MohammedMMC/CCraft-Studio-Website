@@ -1,4 +1,4 @@
-import { uploadToBlob } from "../storage";
+import { deleteFromBlob, uploadToBlob } from "../storage";
 
 export async function uploadProject({ userId, projectId, file, isTemp = false }: {
     userId: string;
@@ -20,4 +20,19 @@ export async function uploadProject({ userId, projectId, file, isTemp = false }:
         name: filename,
         size: file.size,
     };
+}
+
+export async function deleteProject({ userId, projectId, isTemp = false }: {
+    userId: string;
+    projectId?: string;
+    isTemp?: boolean;
+}) {
+    const filename = `${isTemp ? "temp" : projectId}.zip`;
+
+    const result = await deleteFromBlob(
+        `${userId}/${filename}`,
+        "projects"
+    );
+
+    return result;
 }

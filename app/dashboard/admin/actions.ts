@@ -6,7 +6,7 @@ import { isMissingProjectTablesError } from "@/lib/projects/db-guards";
 import { PROJECT_LIMITS, sanitizeReviewLog } from "@/lib/projects/validation";
 import { prisma } from "@/lib/prisma";
 import { isZipFile } from "@/lib/functions";
-import { uploadProject } from "@/lib/projects/upload";
+import { deleteProject, uploadProject } from "@/lib/projects/upload";
 
 export async function reviewProjectAction(formData: FormData): Promise<void> {
     const { userId } = await auth();
@@ -37,6 +37,8 @@ export async function reviewProjectAction(formData: FormData): Promise<void> {
         select: { ownerId: true },
     });
     if (!projectUser) return;
+
+    await deleteProject({ userId: projectUser.ownerId, projectId, isTemp: false });
 
     const uploadedProject = await uploadProject({ file: projectFiles, userId: projectUser.ownerId, projectId, isTemp: false });
 

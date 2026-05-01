@@ -1,3 +1,4 @@
+import { validateApiToken } from "@/lib/auth/validateApiToken";
 import { isZipFile } from "@/lib/functions";
 import { prisma } from "@/lib/prisma";
 import { uploadProject } from "@/lib/projects/upload";
@@ -8,8 +9,12 @@ import { NextRequest, NextResponse } from "next/server";
 const siteUrl = getSiteUrl();
 
 export async function POST(req: NextRequest) {
-    const userId = req.headers.get("x-user-id") as string;
-    const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, role: true } });
+    const validation = await validateApiToken(req);
+    if (validation.error) {
+        return validation.error;
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: validation.user.id }, select: { id: true, role: true } });
     if (!user) {
         return NextResponse.json({ error: "User not found!" }, { status: 404 });
     }
@@ -36,10 +41,10 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Invalid file type." }, { status: 400 });
     }
 
-    const project = await uploadProject({ file, userId, isTemp: true });
+    const project = await uploadProject({ file, userId: user.id, isTemp: true });
 
     const updatedTempFiles = await prisma.tempProjectFiles.upsert({
-        where: { userId: userId },
+        where: { userId: user.id },
         update: {
             url: project.url,
             size: project.size,
@@ -47,7 +52,7 @@ export async function POST(req: NextRequest) {
             componentsVersion: componentsVersion,
         },
         create: {
-            userId: userId,
+            userId: user.id,
             url: project.url,
             size: project.size,
             pathname: project.pathname,

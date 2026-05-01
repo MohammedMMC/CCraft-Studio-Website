@@ -9,6 +9,8 @@ https://github.com/MohammedMMC/CCraft-Studio
 
 CCraft Studio is a web platform for browsing, sharing, and managing CC: Tweaked projects.
 
+![Preview Image](https://github.com/MohammedMMC/CCraft-Studio-Website/blob/main/preview/preview.png?raw=true)
+
 ## Pages
 
 - `/` - Home

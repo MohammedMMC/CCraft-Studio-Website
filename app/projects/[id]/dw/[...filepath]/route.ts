@@ -11,10 +11,25 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   if (!pathArray.length) notFound();
   const requestedPath = pathArray.join("/");
 
-  const projectFiles = await prisma.projectFiles.findUnique({
-    where: { projectId: id },
-    select: { pathname: true },
+  const isTemp = id.startsWith("temp");
+
+  const fetchedProject = isTemp ? null : await prisma.project.findFirst({
+    where: {
+      OR: [
+        { id: id },
+        { name: id },
+      ],
+    },
+    select: { name: true, files: { select: { pathname: true } } },
   });
+  if (!isTemp && !fetchedProject) notFound();
+
+  const project = fetchedProject as NonNullable<typeof fetchedProject>;
+
+  const projectFiles = isTemp ? await prisma.tempProjectFiles.findUnique({
+    where: { id: id.slice(4) },
+    select: { pathname: true },
+  }) : project.files;
   if (!projectFiles) notFound();
 
   const file = await getFromBlob(projectFiles.pathname, "projects");

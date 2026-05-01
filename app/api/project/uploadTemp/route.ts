@@ -2,7 +2,10 @@ import { isZipFile } from "@/lib/functions";
 import { prisma } from "@/lib/prisma";
 import { uploadProject } from "@/lib/projects/upload";
 import { PROJECT_LIMITS } from "@/lib/projects/validation";
+import { getSiteUrl } from "@/lib/site-url";
 import { NextRequest, NextResponse } from "next/server";
+
+const siteUrl = getSiteUrl();
 
 export async function POST(req: NextRequest) {
     const userId = req.headers.get("x-user-id") as string;
@@ -52,5 +55,5 @@ export async function POST(req: NextRequest) {
         },
     });
 
-    return NextResponse.json({ url: updatedTempFiles.url });
+    return NextResponse.json({ url: `${siteUrl}/projects/${encodeURIComponent(updatedTempFiles.id)}/dw` });
 }

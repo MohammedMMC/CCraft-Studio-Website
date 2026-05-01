@@ -7,34 +7,17 @@ import { getSiteUrl } from "@/lib/site-url";
 
 const siteUrl = getSiteUrl();
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string; }>; }) {
-    const { id } = await params;
-    if (!id?.trim()) notFound();
+export async function GET(req: NextRequest, { params }: { params: Promise<{ version: string; }>; }) {
+    const { version } = await params;
+    if (!version || version.trim() === "") notFound();
 
-    const isTemp = id.startsWith("temp");
-
-    const fetchedProject = isTemp ? null : await prisma.project.findFirst({
-        where: {
-            OR: [
-                { id: id },
-                { name: id },
-            ],
-        },
-        select: { name: true, files: { select: { pathname: true, componentsVersion: true } } },
+    const versionData = await prisma.componentsVersions.findUnique({
+        where: { version },
+        select: { pathname: true, version: true },
     });
-    if (!isTemp && !fetchedProject) notFound();
+    if (!versionData) notFound();
 
-    const project = fetchedProject as NonNullable<typeof fetchedProject>;
-
-    const projectFiles = isTemp ? await prisma.tempProjectFiles.findUnique({
-        where: { id: id.slice(4) },
-        select: { pathname: true, componentsVersion: true },
-    }) : project.files;
-    if (!projectFiles) notFound();
-
-    const componentsVersionUrl = `${siteUrl}/componentsVersion/${encodeURIComponent(projectFiles.componentsVersion)}`;
-
-    const file = await getFromBlob(projectFiles.pathname, "projects");
+    const file = await getFromBlob(versionData.pathname, "projects");
     if (!file || !file.blob || !(file.blob.contentType === "application/zip" || file.blob.contentType === "application/x-zip-compressed")) {
         notFound();
     }
@@ -47,19 +30,19 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     const filesLuaEntries = entries
         .map((e) => {
             const encoded = encodeURIComponent(e).replace(/%2F/g, "/");
-            const url = `${siteUrl}/projects/${encodeURIComponent(id)}/dw/${encoded}`;
+            const url = `${siteUrl}/componentsVersion/${version}/${encoded}`;
             return `  { path = "${e}", url = "${url}" }`;
         })
         .join(",\n");
 
     const luaArray = [
-        "-- CCraft Studio Project Downloader",
-        `-- Project: ${isTemp ? "Temporary Project" : project.name}`,
-        `local projectName = "${isTemp ? "Temporary Project" : project.name}"`,
+        "-- CCraft Studio Components Downloader",
+        `-- Components Version: ${versionData.version}`,
+        `local version = "${versionData.version}"`,
         "local files = {",
         filesLuaEntries,
         "}",
-        "local function ensureDir(path)",
+        "\nlocal function ensureDir(path)",
         "  local parts = {}",
         "  for part in string.gmatch(path, \"[^/]+\") do table.insert(parts, part) end",
         "  table.remove(parts)",
@@ -69,10 +52,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         "    if not fs.exists(cur) then fs.makeDir(cur) end",
         "  end",
         "end",
-        "",
-        "print(\"Starting download for: \" .. projectName)",
+        "\nprint(\"Starting download for: \" .. version)",
         "for i, f in ipairs(files) do",
-        "  local fullPath = projectName .. \"/\" .. f.path",
+        "  local fullPath = version .. \"/\" .. f.path",
         "  ensureDir(fullPath)",
         "  print(\"Downloading: \" .. f.path)",
         "  local ok, res = pcall(http.get, f.url)",
@@ -86,16 +68,14 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         "    print(\"Failed to download: \" .. f.path)",
         "  end",
         "end",
-        "",
-        `shell.run("wget run ${componentsVersionUrl}")`,
-        "",
-        "print(\"Download complete. Open /\" .. projectName .. \" to view files.\")",
+        "print(\"Download complete. Open /\" .. version .. \" to view files.\")",
+        ""
     ];
 
     return new Response(luaArray.join("\n"), {
         headers: {
             "Content-Type": "text/plain; charset=utf-8",
-            "Content-Disposition": `attachment; filename="${isTemp ? "Temporary Project" : project.name}.lua"`,
+            "Content-Disposition": `attachment; filename="${versionData.version}.lua"`,
         },
     });
 }

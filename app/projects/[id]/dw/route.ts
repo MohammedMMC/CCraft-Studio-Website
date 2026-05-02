@@ -89,8 +89,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         "end",
         "",
         `shell.run("wget run ${componentsVersionUrl}")`,
-        `shell.run("mv \"" .. componentsVersion .. "/*\"" .. " " .. projectName)`,
-        `shell.run("rm \"" .. componentsVersion .. "\"")`,
+        `shell.run("mv \\"" .. componentsVersion .. "/*\\"" .. " \\"" .. projectName .. "\\"")`,
+        `shell.run("rm \\"" .. componentsVersion .. "\\"")`,
         "",
         "print(\"Project Download complete. Open /\" .. projectName .. \" to view files.\")",
     ];

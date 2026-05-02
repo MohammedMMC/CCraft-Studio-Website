@@ -65,5 +65,5 @@ export async function POST(req: NextRequest) {
         },
     });
 
-    return NextResponse.json({ url: `${siteUrl}/projects/${encodeURIComponent(updatedTempFiles.id)}/dw` });
+    return NextResponse.json({ url: `${siteUrl}/projects/temp_${encodeURIComponent(updatedTempFiles.id)}/dw` });
 }

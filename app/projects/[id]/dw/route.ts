@@ -11,7 +11,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     const { id } = await params;
     if (!id?.trim()) notFound();
 
-    const isTemp = id.startsWith("temp");
+    const isTemp = id.startsWith("temp_");
 
     const fetchedProject = isTemp ? null : await prisma.project.findFirst({
         where: {
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     const project = fetchedProject as NonNullable<typeof fetchedProject>;
 
     const projectFiles = isTemp ? await prisma.tempProjectFiles.findUnique({
-        where: { id: id.slice(4) },
+        where: { id: id.slice(5) },
         select: { pathname: true, componentsVersion: true },
     }) : project.files;
     if (!projectFiles) notFound();

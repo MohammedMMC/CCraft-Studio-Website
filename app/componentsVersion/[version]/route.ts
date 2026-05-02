@@ -68,7 +68,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ vers
         "    print(\"Failed to download: \" .. f.path)",
         "  end",
         "end",
-        "print(\"Download complete. Open /\" .. version .. \" to view files.\")",
+        "print(\"Components Download complete.\")",
         ""
     ];
 

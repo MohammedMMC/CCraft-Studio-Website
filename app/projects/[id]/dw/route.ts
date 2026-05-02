@@ -56,6 +56,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         "-- CCraft Studio Project Downloader",
         `-- Project: ${isTemp ? "Temporary Project" : project.name}`,
         `local projectName = "${isTemp ? "Temporary Project" : project.name}"`,
+        `local componentsVersion = "${projectFiles.componentsVersion}"`,
         "local files = {",
         filesLuaEntries,
         "}",
@@ -88,8 +89,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         "end",
         "",
         `shell.run("wget run ${componentsVersionUrl}")`,
+        `shell.run("mv \"" .. componentsVersion .. "/*\"" .. " " .. projectName)`,
+        `shell.run("rm \"" .. componentsVersion .. "\"")`,
         "",
-        "print(\"Download complete. Open /\" .. projectName .. \" to view files.\")",
+        "print(\"Project Download complete. Open /\" .. projectName .. \" to view files.\")",
     ];
 
     return new Response(luaArray.join("\n"), {

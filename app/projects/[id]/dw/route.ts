@@ -103,6 +103,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         headers: {
             "Content-Type": "text/plain; charset=utf-8",
             "Content-Disposition": `attachment; filename="${isTemp ? "Temporary Project" : project.name}.lua"`,
+            "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0",
         },
     });
 }

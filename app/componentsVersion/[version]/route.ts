@@ -76,6 +76,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ vers
         headers: {
             "Content-Type": "text/plain; charset=utf-8",
             "Content-Disposition": `attachment; filename="${versionData.version}.lua"`,
+            "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0",
         },
     });
 }

@@ -63,8 +63,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
   return new Response(content, {
     headers: {
-      'Content-Type': contentType,
-      'Content-Disposition': `attachment; filename="${matchKey.split('/').pop()}"`,
+      "Content-Type": contentType,
+      "Content-Disposition": `attachment; filename="${matchKey.split('/').pop()}"`,
+      "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      "Pragma": "no-cache",
+      "Expires": "0",
     },
   });
 }

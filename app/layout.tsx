@@ -1,10 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
+
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { getSiteUrl } from "@/lib/site-url";
+
+import localFont from "next/font/local";
+import { LINKS } from "@/lib/links";
 
 const siteUrl = getSiteUrl();
 
@@ -93,7 +96,7 @@ export default function RootLayout({
     logo: `${siteUrl}/images/icon.png`,
     description: "A platform for browsing, sharing, and managing CC: Tweaked projects.",
     alternateName: ["Computer Craft Studio", "CCraft"],
-    sameAs: ["https://github.com/ccraft-studio"],
+    sameAs: [LINKS.GITHUB],
   };
 
   return (

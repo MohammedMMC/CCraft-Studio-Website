@@ -54,6 +54,30 @@ export default function HomePage() {
       {/* Images Section */}
       <PreviewSwiper />
 
+      {/* Overview Section */}
+      <section className="my-24 space-y-3">
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-neutral-500">What is CCraft Studio</p>
+        <h2 className="text-2xl sm:text-3xl font-bold">A faster way to build <strong className="whitespace-nowrap">CC: Tweaked</strong> apps</h2>
+        <p className="text-base md:text-lg text-neutral-700">
+          <strong className="whitespace-nowrap">CCraft Studio</strong> is an open-source desktop app that helps you design <strong>ComputerCraft</strong> interfaces,
+          build logic with blocks, and ship projects into <strong>Minecraft</strong> easily.
+        </p>
+      </section>
+
+      {/* Features Section */}
+      {/* <section className="my-24">
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div className="cardcb p-4 text-sm text-white/90">
+            <p className="font-semibold">Build UI without coding</p>
+            <p className="text-white-70">Start with layouts, then add functionality using blocks.</p>
+          </div>
+          <div className="cardcb p-4 text-sm text-white/90">
+            <p className="font-semibold">Test fast</p>
+            <p className="text-white/70">Preview in CraftOS-PC before exporting in-game.</p>
+          </div>
+        </div>
+      </section> */}
+
     </ScreenLayout>
   );
 }

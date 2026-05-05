@@ -27,6 +27,18 @@ body {
   @apply border-4 bg-gray/90 shadow-gray border-l-white/35 border-t-white/35 border-b-white/25 border-r-white/25 shadow-[0_4px_0_0];
 }
 
+hr {
+  @apply h-0.5 bg-white/20 border-none!;
+}
+
+hr.vr {
+  @apply w-0.5 h-full!;
+}
+
+.section-title {
+  @apply text-4xl text-center font-bold;
+}
+
 :where(
   input:not([type="hidden"]):not([type="radio"]):not([type="checkbox"]),
   select,

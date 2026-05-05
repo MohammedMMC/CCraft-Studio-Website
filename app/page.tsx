@@ -30,6 +30,32 @@ export const metadata: Metadata = {
   },
 };
 
+const featuresItems = [
+  {
+    title: "Responsive UI design",
+    desc: "Create interfaces that work well on different screen sizes.",
+    images: [
+      { image: "/images/features/screen-computer-preview.png", alt: "Computer Terminal" },
+      { image: "/images/features/screen-monitor-5x4-preview.png", alt: "5x4 Monitor" },
+    ],
+  },
+  {
+    title: "Export the project",
+    desc: "Export your project with the config you like.",
+    image: "/images/features/project-export-preview.png",
+  },
+  {
+    title: "Build Logic using blocks",
+    desc: "Program your apps using blocks instead of coding.",
+    image: "/images/features/blocks-preview.png",
+  },
+  {
+    title: "Test your projects fast",
+    desc: "Use CraftOS-PC to test your projects quickly.",
+    image: "/images/features/craftospc-preview.png",
+  },
+];
+
 export default function HomePage() {
   return (
     <ScreenLayout>
@@ -46,7 +72,7 @@ export default function HomePage() {
         />
         <div className="w-full max-w-xl">
           <h1 className="font-bold lg:text-5xl md:text-[calc(20px+1vw)] sm:text-3xl text-2xl sm:my-10 my-4">Design and Build <br /> apps with ease</h1>
-          <p className="md:text-lg text-md">An easy-to-use studio application that helps you to quickly and easily build systems/apps for <strong className="whitespace-nowrap">CC: Tweaked</strong> minecraft mod.</p>
+          <p className="md:text-lg text-sm">An easy-to-use studio application that helps you to quickly and easily build systems/apps for <strong className="whitespace-nowrap">CC: Tweaked</strong> minecraft mod.</p>
           <Button href={LINKS.GITHUB_RELEASES} className="w-full max-w-2xs mt-12 justify-center">Download</Button>
         </div>
       </section>
@@ -65,18 +91,48 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      {/* <section className="my-24">
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div className="cardcb p-4 text-sm text-white/90">
-            <p className="font-semibold">Build UI without coding</p>
-            <p className="text-white-70">Start with layouts, then add functionality using blocks.</p>
-          </div>
-          <div className="cardcb p-4 text-sm text-white/90">
-            <p className="font-semibold">Test fast</p>
-            <p className="text-white/70">Preview in CraftOS-PC before exporting in-game.</p>
-          </div>
+      <section className="my-24">
+        <h2 className="section-title">Features</h2>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 mt-12">
+          {featuresItems.map((item, index) => (
+            <div key={`feature-${index}`} className={"cardcb p-4 text-sm text-white/90 flex flex-col gap-3 " + (item.images ? "col-span-2" : "")}>
+              <div className="space-y-1">
+                <p className="text-lg">{item.title}</p>
+                <p className="text-sm text-white/70">{item.desc}</p>
+              </div>
+              <hr />
+              {item.images && (
+                <div className="flex gap-2 mt-auto">
+                  {item.images.map((img, imgIndex) => (
+                    <div
+                      key={`feature-image-${imgIndex}`}
+                      className="w-full h-auto"
+                    >
+                      <Image
+                        className="aspect-video w-full h-auto"
+                        src={img.image}
+                        alt={`${item.title} - ${img.alt} preview`}
+                        width={320}
+                        height={320}
+                      />
+                      <p className="text-xs text-white/50 text-center mt-1">{img.alt}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {item.image && (
+                <Image
+                  className="w-full h-full aspect-video mt-auto"
+                  src={item.image}
+                  alt={`${item.title} preview`}
+                  height={320}
+                  width={320}
+                />
+              )}
+            </div>
+          ))}
         </div>
-      </section> */}
+      </section>
 
     </ScreenLayout>
   );

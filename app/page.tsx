@@ -40,19 +40,21 @@ const featuresItems = [
     ],
   },
   {
-    title: "Export the project",
-    desc: "Export your project with the config you like.",
-    image: "/images/features/project-export-preview.png",
-  },
-  {
     title: "Build Logic using blocks",
     desc: "Program your apps using blocks instead of coding.",
     image: "/images/features/blocks-preview.png",
   },
   {
+    title: "Easy To Use",
+    desc: "Drag-and-drop components to the screen and style them easily from the properties tab.",
+  },
+  {
+    title: "Custom Project Export",
+    desc: "You are able to only export the UI and program the logic using Lua.",
+  },
+  {
     title: "Test your projects fast",
-    desc: "Use CraftOS-PC to test your projects quickly.",
-    image: "/images/features/craftospc-preview.png",
+    desc: "Use built-in CraftOS-PC app, or use our api cloud upload to test your projects quickly.",
   },
 ];
 
@@ -93,14 +95,14 @@ export default function HomePage() {
       {/* Features Section */}
       <section className="my-24">
         <h2 className="section-title">Features</h2>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 mt-12">
+        <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-12">
           {featuresItems.map((item, index) => (
-            <div key={`feature-${index}`} className={"cardcb p-4 text-sm text-white/90 flex flex-col gap-3 " + (item.images ? "col-span-2" : "")}>
+            <div key={`feature-${index}`} className={"cardcb p-4 text-sm text-white/90 flex flex-col gap-3 " + (item.images ? "md:col-span-2" : "")}>
               <div className="space-y-1">
                 <p className="text-lg">{item.title}</p>
                 <p className="text-sm text-white/70">{item.desc}</p>
               </div>
-              <hr />
+              {(item.image || item.images) && (<hr />)}
               {item.images && (
                 <div className="flex gap-2 mt-auto">
                   {item.images.map((img, imgIndex) => (
@@ -114,6 +116,7 @@ export default function HomePage() {
                         alt={`${item.title} - ${img.alt} preview`}
                         width={320}
                         height={320}
+                        loading="lazy"
                       />
                       <p className="text-xs text-white/50 text-center mt-1">{img.alt}</p>
                     </div>
@@ -127,6 +130,7 @@ export default function HomePage() {
                   alt={`${item.title} preview`}
                   height={320}
                   width={320}
+                  loading="lazy"
                 />
               )}
             </div>

@@ -20,7 +20,7 @@
 }
 
 body {
-  @apply bg-white text-neutral-900 font-mc;
+  @apply bg-white text-neutral-900 font-mc scroll-smooth;
 }
 
 .cardcb {
@@ -36,7 +36,11 @@ hr.vr {
 }
 
 .section-title {
-  @apply text-4xl text-center font-bold;
+  @apply text-4xl text-center font-bold relative;
+}
+
+.section-title::before {
+  @apply content-[''] absolute -bottom-4 w-24 h-1 bg-lime/90 left-1/2 -translate-x-1/2;
 }
 
 :where(
